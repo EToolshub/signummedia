@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signum Media · Una orden. Toda su red.</title>
+<meta name="description" content="Signum Media diseña, instala y gestiona redes de pantallas digitales para las grandes marcas de Venezuela. Boceto de propuesta.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E0318">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 86 86'%3E%3Crect width='86' height='86' fill='%230E0318'/%3E%3Cpath fill='%23D70A84' d='M3.33,70.04v-17.76l20.15,2.93v3.86h39.07v-6.79L3.34,42.94V16h79.37v18.76l-20.15-3.09v-4.71H23.48v7.33l59.22,9.34v26.4H3.33Z'/%3E%3C/svg%3E">
+<script>document.documentElement.className='js';</script>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="nav" id="nav">
+  <a class="nav-logo" href="#inicio" aria-label="Signum Media, volver al inicio">
+    <img src="assets/Logo-Signum-Blanco.png" alt="" width="130" height="36">
+  </a>
+  <nav class="nav-links" id="navLinks" aria-label="Principal">
+    <a href="#vitrina">Vitrina</a>
+    <a href="#red">Red</a>
+    <a href="#proceso">Cómo trabajamos</a>
+    <a href="#porque">Por qué Signum</a>
+  </nav>
+  <a class="btn btn-nav" href="#contacto"><span>Evaluar mi red</span></a>
+  <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks">Menú</button>
+</header>
+
+<main id="main">
+
+<div class="muro" id="muro">
+  <div class="muro-bg"><canvas class="muro-canvas" id="wall" aria-hidden="true"></canvas></div>
+
+  <section class="hero" id="inicio" aria-labelledby="hero-h">
+    <div class="hero-in">
+      <h1 id="hero-h" class="d1" data-split>Una orden.<br>Toda su red.</h1>
+      <div class="hero-row">
+        <p class="hero-lead" data-r>Signum Media diseña, instala y gestiona redes de pantallas digitales para las grandes marcas de Venezuela.</p>
+        <div class="hero-act" data-r>
+          <button class="btn" id="publish" type="button"><span>Publicar en toda la red</span></button>
+          <a class="lnk" href="#contacto">Evaluar mi red</a>
+        </div>
+        <div class="hero-status" data-r>
+          <p class="counter" id="counter">Simulación · <span id="cN">0</span> de <span id="cT">320</span> pantallas actualizadas</p>
+          <p class="counter-hint" id="counterHint">Contenido de muestra y piezas reales. Pulse cualquier pantalla: la orden sale de ahí.</p>
+          <p class="sr-only" role="status" id="counterLive"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="medio" id="medio" aria-labelledby="medio-h">
+    <div class="medio-stick">
+      <svg class="medio-s" viewBox="0 12 86.04 62" aria-hidden="true"><path d="M3.33,70.04v-17.76l20.15,2.93v3.86h39.07v-6.79L3.34,42.94V16h79.37v18.76l-20.15-3.09v-4.71H23.48v7.33l59.22,9.34v26.4H3.33Z"/></svg>
+      <div class="medio-text">
+        <h2 id="medio-h" class="d2 beat beat1">Una pantalla es un aparato.</h2>
+        <h2 class="d2 beat beat2">Una red es su medio propio.</h2>
+        <p class="beat beat3 lead">Cuando la señal, el mensaje y el horario salen de un solo lugar, cada local, cada isla y cada pasillo dicen lo correcto al mismo tiempo.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="vitrina" id="vitrina" aria-labelledby="vitrina-h">
+  <div class="wrap">
+    <h2 id="vitrina-h" class="d2" data-split>Marcas que ya están al aire</h2>
+  </div>
+
+  <div class="led-wall wrap" id="ledWall" data-r>
+    <canvas class="led-canvas" id="ledCanvas" aria-hidden="true"></canvas>
+    <button class="panel p1" type="button" data-logo="mcdonalds"><img src="assets/logos/mcdonalds.png" alt="Logo de McDonald's" loading="lazy"></button>
+    <button class="panel p2" type="button" data-logo="kfc"><img src="assets/logos/kfc.png" alt="Logo de KFC" loading="lazy"></button>
+    <button class="panel p3" type="button" data-logo="cinex"><img src="assets/logos/cinex.png" alt="Logo de Cinex" loading="lazy"></button>
+    <button class="panel p4" type="button" data-logo="arturos"><img src="assets/logos/arturos.png" alt="Logo de Arturo's" loading="lazy"></button>
+  </div>
+
+  <div class="led-strip" id="ledStrip" data-r>
+    <canvas class="led-canvas" id="stripCanvas" aria-hidden="true"></canvas>
+    <ul class="strip-fallback">
+      <li><img src="assets/logos/alquadrado.png" alt="Logo de Al Quadrado Pizza" loading="lazy"></li>
+      <li><img src="assets/logos/sotano7.png" alt="Logo de Sótano Siete Pizzería" loading="lazy"></li>
+      <li><img src="assets/logos/laplaza.png" alt="Logo de La Plaza" loading="lazy"></li>
+      <li><img src="assets/logos/migas.png" alt="Logo de Miga's Café" loading="lazy"></li>
+      <li><img src="assets/logos/hulmans.png" alt="Logo de Helados Hulmans" loading="lazy"></li>
+      <li><img src="assets/logos/golfiao.png" alt="Logo de Golfiao" loading="lazy"></li>
+    </ul>
+  </div>
+
+  <div class="wrap">
+    <p class="clientes" data-r>McDonald's, KFC, Cinex, Arturo's, Al Quadrado Pizza, Sótano Siete Pizzería, La Plaza, Miga's Café, Helados Hulmans y Golfiao.</p>
+  </div>
+
+  <div class="real" id="real">
+    <div class="real-stick">
+      <div class="real-track" id="realTrack">
+        <div class="real-intro">
+          <h3 class="d3 real-t" data-split>Trabajo real</h3>
+          <p class="lead" data-r>Tres piezas de clientes de Signum, tal como se publicaron. Sin simulaciones en esta parte.</p>
+        </div>
+        <figure class="scr scr-w">
+          <div class="scr-f"><img src="assets/screens/arturos-clasicos.jpg" alt="Menú digital Los Clásicos de Arturo's: combos de pollo con sus precios, acompañantes y adicionales" width="1600" height="960" loading="lazy"><i class="scr-off"></i></div>
+          <figcaption>Menú digital Los Clásicos, Arturo's</figcaption>
+        </figure>
+        <figure class="scr scr-w">
+          <div class="scr-f"><img src="assets/screens/arturos-nueva-era.jpg" alt="Menú digital La Nueva Era de Arturo's: Pana Crunch, Mayo Crunch, Panita Crunch y Nuggets con sus precios" width="1600" height="1100" loading="lazy"><i class="scr-off"></i></div>
+          <figcaption>Menú digital La Nueva Era, Arturo's</figcaption>
+        </figure>
+        <figure class="scr scr-v">
+          <div class="scr-f"><img src="assets/screens/alquadrado-totem.jpg" alt="Tótem de promoción de Al Quadrado Pizza con la pizza gigante del mes" width="720" height="1600" loading="lazy"><i class="scr-off"></i></div>
+          <figcaption>Tótem de promoción, Al Quadrado Pizza</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="red" id="red" aria-labelledby="red-h">
+  <div class="wrap">
+    <div class="red-head">
+      <h2 id="red-h" class="d2" data-split>Programe un país entero</h2>
+      <p class="lead" data-r>Cambiar un precio, un combo o un aviso interno debería ser una decisión, no un proyecto.</p>
+    </div>
+
+    <div class="console" data-ui data-r id="console">
+      <form class="con-ctl" id="conForm" novalidate>
+        <fieldset>
+          <legend>Campaña</legend>
+          <label class="opt"><input type="radio" name="camp" value="Desayuno de lunes a viernes"><span>Desayuno de lunes a viernes</span></label>
+          <label class="opt"><input type="radio" name="camp" value="Almuerzo ejecutivo" checked><span>Almuerzo ejecutivo</span></label>
+          <label class="opt"><input type="radio" name="camp" value="Promoción de fin de semana"><span>Promoción de fin de semana</span></label>
+        </fieldset>
+        <fieldset>
+          <legend>Horario</legend>
+          <div class="seg">
+            <label><input type="radio" name="when" value="ahora" checked><span>Ahora</span></label>
+            <label><input type="radio" name="when" value="06:00"><span>06:00</span></label>
+            <label><input type="radio" name="when" value="12:00"><span>12:00</span></label>
+            <label><input type="radio" name="when" value="18:00"><span>18:00</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Ciudades <button type="button" class="mini" id="conAll">Todas</button> <button type="button" class="mini" id="conNone">Ninguna</button></legend>
+          <div class="cities" id="conCities">
+            <label><input type="checkbox" name="city" value="Caracas" checked><span>Caracas</span></label>
+            <label><input type="checkbox" name="city" value="Maracaibo" checked><span>Maracaibo</span></label>
+            <label><input type="checkbox" name="city" value="Valencia" checked><span>Valencia</span></label>
+            <label><input type="checkbox" name="city" value="Barquisimeto" checked><span>Barquisimeto</span></label>
+            <label><input type="checkbox" name="city" value="Puerto Ordaz"><span>Puerto Ordaz</span></label>
+            <label><input type="checkbox" name="city" value="Barcelona" checked><span>Barcelona</span></label>
+            <label><input type="checkbox" name="city" value="San Cristóbal"><span>San Cristóbal</span></label>
+            <label><input type="checkbox" name="city" value="Maturín"><span>Maturín</span></label>
+            <label><input type="checkbox" name="city" value="Porlamar"><span>Porlamar</span></label>
+            <label><input type="checkbox" name="city" value="Mérida"><span>Mérida</span></label>
+          </div>
+        </fieldset>
+        <p class="con-err" id="conErr" role="alert"></p>
+        <button class="btn btn-full" type="submit" id="conPublish"><span>Publicar</span></button>
+      </form>
+
+      <div class="con-map">
+        <svg id="conMap" viewBox="-20 -30 1040 900" role="img" aria-label="Mapa de Venezuela con diez ciudades de ejemplo. El estado de cada ciudad aparece en el registro.">
+          <path class="map-land" d="M145.7,28.5L143.6,45.9L100.2,54.6L124.3,88.1L123.4,126.7L90.9,169.5L118.8,228.1L150.6,223.3L167.2,170L144.3,144L140.6,88.1L232.5,58.1L222.3,23.3L248.2,0L274.7,51.9L326.4,53.1L374.4,94.2L377.3,118.7L443.6,119.3L522.4,111.7L564.7,144.8L621.1,153.9L662.6,130.9L663.4,112.3L754.8,107.8L843.3,106.8L780.6,128.6L805.8,163.4L864.9,169L920.8,205.3L932.6,264.4L971.1,262.8L1000,280.2L941.5,323.5L935.1,350.4L960.3,377.8L942,391.7L896.6,403.5L898,437.6L878,457.9L928,513.9L937.8,534.8L910.8,562.9L828.2,590.6L775.1,602L753.8,619.5L695.1,601L640.5,591.6L626.6,598.4L659.7,617.5L656.7,667L667,713.5L729.5,719.8L733.5,735.3L680.7,756.3L672.2,787.6L641.8,799.7L586.9,817L572.6,839.5L515.2,844.3L474.6,805.3L452,731.7L432.4,705.9L405.6,689.6L443,652.8L440.5,636.3L419.5,614.4L404.7,565.3L410.5,512.4L426.9,487.6L440.2,447.8L414.1,435.2L372,443.6L318.9,439.6L289,447.5L237.1,384L194.2,374.6L99.3,381.7L81.7,355.9L63.5,349.8L60.9,334.4L69.7,307.1L63.9,277.3L47.6,261.1L38.1,227.2L0,222.2L20.5,179.1L29.5,126.4L51,98.9L79.5,77.8L98.3,40.9L145.7,28.5Z"/>
+          <g id="mapArcs"></g>
+          <g id="mapNodes"></g>
+        </svg>
+        <p class="con-label">Simulación con ciudades de ejemplo. No representa la cobertura actual.</p>
+      </div>
+
+      <div class="con-log">
+        <h3 class="con-title">Registro <span id="logCount" class="log-count">0 de 0 al aire</span></h3>
+        <div class="log-scroll">
+          <table class="log">
+            <thead><tr><th scope="col">Ciudad</th><th scope="col">Estado</th><th scope="col">Hora</th></tr></thead>
+            <tbody id="logBody"><tr class="log-empty"><td colspan="3">Sin publicaciones todavía.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="sr-only" role="status" id="logLive"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ent" id="entornos" aria-labelledby="ent-h">
+  <div class="wrap">
+    <h2 id="ent-h" class="d2" data-split>Una red distinta para cada entorno</h2>
+  </div>
+  <ul class="acc" id="acc" data-r data-allow-overflow>
+    <li class="acc-p is-open">
+      <button class="acc-b" type="button" aria-expanded="true" aria-controls="acc1"><span class="acc-v">Tiendas y cadenas</span></button>
+      <div class="acc-m"><video muted loop playsinline preload="none" poster="assets/video/mall-escaleras.jpg" data-src="assets/video/mall-escaleras.mp4" aria-hidden="true"></video></div>
+      <div class="acc-t" id="acc1">
+        <h3 class="d3">Tiendas y cadenas</h3>
+        <p>Precio, combo y promoción cambian a la vez en todos los locales.</p>
+        <p class="cap">Imagen de referencia: escaleras de un centro comercial.</p>
+      </div>
+    </li>
+    <li class="acc-p">
+      <button class="acc-b" type="button" aria-expanded="false" aria-controls="acc2"><span class="acc-v">Centros comerciales</span></button>
+      <div class="acc-m"><video muted loop playsinline preload="none" poster="assets/video/mall-atrio.jpg" data-src="assets/video/mall-atrio.mp4" aria-hidden="true"></video></div>
+      <div class="acc-t" id="acc2">
+        <h3 class="d3">Centros comerciales</h3>
+        <p>Pantallas de gran formato para publicidad, orientación y marcas aliadas.</p>
+        <p class="cap">Imagen de referencia: atrio de un centro comercial.</p>
+      </div>
+    </li>
+    <li class="acc-p">
+      <button class="acc-b" type="button" aria-expanded="false" aria-controls="acc3"><span class="acc-v">Estaciones de servicio</span></button>
+      <div class="acc-m"><video muted loop playsinline preload="none" poster="assets/video/valla-noche.jpg" data-src="assets/video/valla-noche.mp4" aria-hidden="true"></video></div>
+      <div class="acc-t" id="acc3">
+        <h3 class="d3">Estaciones de servicio</h3>
+        <p>Mensaje visible en exteriores, con la vía como público.</p>
+        <p class="cap">Imagen de referencia: soporte exterior junto a una autopista.</p>
+      </div>
+    </li>
+    <li class="acc-p">
+      <button class="acc-b" type="button" aria-expanded="false" aria-controls="acc4"><span class="acc-v">Cines y entretenimiento</span></button>
+      <div class="acc-m"><video muted loop playsinline preload="none" poster="assets/video/led-purpura.jpg" data-src="assets/video/led-purpura.mp4" aria-hidden="true"></video></div>
+      <div class="acc-t" id="acc4">
+        <h3 class="d3">Cines y entretenimiento</h3>
+        <p>Cartelera, confitería y promoción en el mismo sistema.</p>
+        <p class="cap">Imagen de referencia: muro LED de un espectáculo.</p>
+      </div>
+    </li>
+    <li class="acc-p">
+      <button class="acc-b" type="button" aria-expanded="false" aria-controls="acc5"><span class="acc-v">Información interna</span></button>
+      <div class="acc-m"><video muted loop playsinline preload="none" poster="assets/video/oficina-pantallas.jpg" data-src="assets/video/oficina-pantallas.mp4" aria-hidden="true"></video></div>
+      <div class="acc-t" id="acc5">
+        <h3 class="d3">Información interna</h3>
+        <p>Sedes y plantas que reciben el mismo aviso, al mismo tiempo.</p>
+        <p class="cap">Imagen de referencia: oficina con pantallas de datos.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section class="proc" id="proceso" aria-labelledby="proc-h">
+  <div class="proc-stick" id="procStick">
+    <div class="proc-world" id="procWorld" data-allow-overflow>
+      <svg class="proc-cable" id="procCable" aria-hidden="true"><path id="cableBase"/><path id="cablePath"/><circle id="cableTip" r="11"/></svg>
+      <h2 id="proc-h" class="d2 proc-h" data-split>De la pared en blanco a la red al aire</h2>
+      <i class="proc-bar" aria-hidden="true"><i id="procFill"></i></i>
+      <ol class="proc-list">
+        <li class="st st1">
+          <div class="st-txt"><h3 class="d3">Diagnóstico.</h3><p class="lead">Recorremos su operación: ubicaciones, horarios, públicos y lo que cada pantalla debe lograr.</p></div>
+          <div class="st-vis vis-diag" aria-hidden="true">
+            <svg viewBox="0 0 560 400" preserveAspectRatio="xMidYMid slice">
+              <rect class="r0" width="560" height="400"/>
+              <rect class="r1" x="28" y="28" width="210" height="150"/><rect class="r1" x="254" y="28" width="278" height="92"/>
+              <rect class="r1" x="254" y="136" width="130" height="236"/><rect class="r1" x="400" y="136" width="132" height="236"/>
+              <rect class="r1" x="28" y="194" width="210" height="178"/>
+              <rect class="scan" x="0" y="0" width="84" height="400"/>
+              <g class="pin" style="--d:.1s"><circle cx="126" cy="96" r="12"/><text x="146" y="103">Entrada</text></g>
+              <g class="pin" style="--d:.5s"><circle cx="300" cy="72" r="12"/><text x="320" y="79">Caja · 06:00</text></g>
+              <g class="pin" style="--d:.9s"><circle cx="318" cy="250" r="12"/><text x="280" y="290">Pasillo</text></g>
+              <g class="pin" style="--d:1.3s"><circle cx="452" cy="210" r="12"/><text x="424" y="250">Isla</text></g>
+              <g class="pin" style="--d:1.7s"><circle cx="100" cy="290" r="12"/><text x="120" y="297">Terraza · 18:00</text></g>
+            </svg>
+          </div>
+        </li>
+        <li class="st st2">
+          <div class="st-txt"><h3 class="d3">Diseño a medida.</h3><p class="lead">Soportes y contenidos pensados para integrarse a cada entorno, no plantillas repetidas.</p></div>
+          <div class="st-vis vis-dise" aria-hidden="true">
+            <div class="fmt f-a"><b>Menú</b><i></i><i></i><i></i></div>
+            <div class="fmt f-b"><b>Hoy</b><span class="rombo"></span></div>
+            <div class="fmt f-c"><b>Promoción de fin de semana</b><b>Promoción de fin de semana</b></div>
+            <p class="vis-tag">Contenido de muestra</p>
+          </div>
+        </li>
+        <li class="st st3">
+          <div class="st-txt"><h3 class="d3">Instalación profesional.</h3><p class="lead">Interiores, exteriores y ubicaciones únicas, configurados para su lugar exacto.</p></div>
+          <div class="st-vis vis-inst" aria-hidden="true">
+            <div class="iso">
+              <div class="pl pl-a"><span>Muro</span></div>
+              <div class="pl pl-b"><span>Soporte</span></div>
+              <div class="pl pl-c"><span>Panel</span></div>
+              <div class="pl pl-d"><svg viewBox="0 12 86.04 62"><path d="M3.33,70.04v-17.76l20.15,2.93v3.86h39.07v-6.79L3.34,42.94V16h79.37v18.76l-20.15-3.09v-4.71H23.48v7.33l59.22,9.34v26.4H3.33Z"/></svg></div>
+            </div>
+          </div>
+        </li>
+        <li class="st st4">
+          <div class="st-txt"><h3 class="d3">Software.</h3><p class="lead">Su equipo actualiza y gestiona el contenido sin depender de nadie.</p></div>
+          <div class="st-vis vis-soft" data-ui aria-hidden="true">
+            <div class="cms">
+              <div class="cms-bar"><span>Almuerzo ejecutivo</span><span class="cms-pub">Publicar</span></div>
+              <div class="cms-body">
+                <div class="cms-list">
+                  <div class="cms-it on">Menú de mediodía</div>
+                  <div class="cms-it">Combo del día</div>
+                  <div class="cms-it">Aviso de horario</div>
+                  <div class="cms-it">Promoción</div>
+                </div>
+                <div class="cms-prev"><div class="cms-a">Menú de mediodía</div><div class="cms-b">Combo del día</div></div>
+              </div>
+              <div class="cms-foot"><span>Contenido de muestra</span><span class="cms-ok">Al aire</span></div>
+              <svg class="cms-cur" viewBox="0 0 24 28"><path d="M2 2v22l6-6 5 9 4-2-5-9h9z"/></svg>
+            </div>
+          </div>
+        </li>
+        <li class="st st5">
+          <div class="st-txt"><h3 class="d3">Operación.</h3><p class="lead">Acompañamos la red después de encenderla, porque ahí empieza su valor.</p></div>
+          <div class="st-vis vis-oper" aria-hidden="true"><div class="oper" id="operGrid"></div><p class="vis-tag">Simulación</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="porque" id="porque" aria-labelledby="porque-h">
+  <div class="wrap">
+    <h2 id="porque-h" class="d2" data-split>Un solo responsable, de la gráfica a la pared</h2>
+
+    <div class="cmp-wrap" data-ui id="cmpWrap">
+      <i class="cmp-sig" id="cmpSig" aria-hidden="true"></i>
+      <table class="cmp" id="cmp">
+        <caption class="sr-only">Comparación de lo que cubre cada tipo de proveedor</caption>
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col">Proveedor de equipos</th>
+            <th scope="col">Agencia creativa</th>
+            <th scope="col" class="sig">Signum Media</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Diseño de contenido</th><td><span class="m m-no">No</span></td><td><span class="m m-si">Sí</span></td><td class="sig"><span class="m m-si">Sí</span></td></tr>
+          <tr><th scope="row">Soportes a medida</th><td><span class="m m-pa">Parcial</span></td><td><span class="m m-no">No</span></td><td class="sig"><span class="m m-si">Sí</span></td></tr>
+          <tr><th scope="row">Instalación profesional</th><td><span class="m m-pa">Parcial</span></td><td><span class="m m-no">No</span></td><td class="sig"><span class="m m-si">Sí</span></td></tr>
+          <tr><th scope="row">Software de gestión</th><td><span class="m m-pa">Parcial</span></td><td><span class="m m-no">No</span></td><td class="sig"><span class="m m-si">Sí</span></td></tr>
+          <tr><th scope="row">Un solo interlocutor</th><td><span class="m m-no">No</span></td><td><span class="m m-no">No</span></td><td class="sig"><span class="m m-si">Sí</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="tbc-row">
+      <li data-r><span class="tbc d3">[N.º de pantallas en operación]</span></li>
+      <li data-r><span class="tbc d3">[Ubicaciones activas]</span></li>
+      <li data-r><span class="tbc d3">[Años de experiencia]</span></li>
+    </ul>
+    <p class="tbc-note" data-r>Cifras por confirmar con Signum</p>
+    <p class="porque-end d2" data-split>Atendemos redes, no pantallas sueltas.</p>
+  </div>
+</section>
+
+<section class="contacto" id="contacto" aria-labelledby="contacto-h">
+  <div class="wrap">
+    <h2 id="contacto-h" class="d2 contacto-h" data-split>Evalúe su red con nosotros</h2>
+  </div>
+  <div class="wrap contacto-g">
+    <div class="contacto-l">
+      <p class="contacto-lead" data-r>Cuéntenos cuántas ubicaciones opera y le decimos cómo llevaría su red.</p>
+      <ul class="datos" data-r>
+        <li><span class="tbc d3">[correo comercial]</span></li>
+        <li><span class="tbc d3">[teléfono / WhatsApp]</span></li>
+        <li><span class="tbc d3">[dirección]</span></li>
+      </ul>
+    </div>
+    <div class="contacto-r" data-ui data-r>
+      <form class="form" id="form" novalidate>
+        <div class="f"><label for="fEmpresa">Empresa</label><input id="fEmpresa" name="empresa" type="text" autocomplete="organization" required aria-describedby="eEmpresa"><p class="f-err" id="eEmpresa"></p></div>
+        <div class="f"><label for="fNombre">Nombre y cargo</label><input id="fNombre" name="nombre" type="text" autocomplete="name" required aria-describedby="eNombre"><p class="f-err" id="eNombre"></p></div>
+        <div class="f f-full"><label for="fCorreo">Correo corporativo</label><input id="fCorreo" name="correo" type="email" autocomplete="email" inputmode="email" required aria-describedby="eCorreo"><p class="f-err" id="eCorreo"></p></div>
+        <div class="f"><label for="fSector">Sector</label>
+          <select id="fSector" name="sector" required aria-describedby="eSector">
+            <option value="">Elija una opción</option>
+            <option>Tiendas y cadenas</option>
+            <option>Restaurantes y comida rápida</option>
+            <option>Centros comerciales</option>
+            <option>Estaciones de servicio</option>
+            <option>Cines y entretenimiento</option>
+            <option>Banca y servicios</option>
+            <option>Corporativo e información interna</option>
+            <option>Otro</option>
+          </select><p class="f-err" id="eSector"></p></div>
+        <div class="f"><label for="fUbic">Número de ubicaciones</label>
+          <select id="fUbic" name="ubicaciones" required aria-describedby="eUbic">
+            <option value="">Elija una opción</option>
+            <option>10 a 25</option>
+            <option>26 a 100</option>
+            <option>101 a 300</option>
+            <option>Más de 300</option>
+          </select><p class="f-err" id="eUbic"></p></div>
+        <div class="f f-full"><label for="fMsg">Mensaje</label><textarea id="fMsg" name="mensaje" rows="4" required aria-describedby="eMsg"></textarea><p class="f-err" id="eMsg"></p></div>
+        <div class="f-full"><button class="btn btn-full" type="submit"><span>Solicitar evaluación</span></button></div>
+      </form>
+      <div class="form-ok" id="formOk" tabindex="-1" role="status" hidden>
+        <p class="d3">Solicitud lista</p>
+        <p>Boceto: en la versión final esta solicitud llegará al equipo comercial de Signum.</p>
+        <button class="btn" type="button" id="formAgain"><span>Escribir otra solicitud</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="pie" id="pie">
+  <div class="pie-led" id="pieLed">
+    <canvas class="led-canvas" id="pieCanvas" aria-hidden="true"></canvas>
+    <img class="pie-fallback" src="assets/Logo-Signum-Blanco.png" alt="Signum Media">
+  </div>
+  <div class="wrap pie-g">
+    <nav class="pie-nav" aria-label="Pie de página">
+      <a href="#vitrina">Vitrina</a>
+      <a href="#red">Red</a>
+      <a href="#proceso">Cómo trabajamos</a>
+      <a href="#porque">Por qué Signum</a>
+      <a href="#contacto">Evaluar mi red</a>
+    </nav>
+    <div class="pie-txt">
+      <p>Boceto de propuesta. Cifras, contacto y contenidos sujetos a validación por Signum Media.</p>
+      <p>Video de entornos: Mixkit.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data/logos64.js"></script>
+<script src="assets/data/textures.js"></script>
+<script src="assets/data/venezuela.js"></script>
+<script src="assets/data/brand64.js"></script>
+<script src="js/vendor/three.min.js"></script>
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/vendor/lenis.min.js"></script>
+<script src="js/wall.js"></script>
+<script src="js/led.js"></script>
+<script src="js/console.js"></script>
+<script src="js/process.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
