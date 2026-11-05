@@ -46,7 +46,7 @@
   }
 
   /* ---------- Contenido: menús genéricos de comida rápida, sin marcas, dibujados por código ---------- */
-  function F(px, stretch) { return '800 ' + (stretch || 'expanded') + ' ' + Math.round(px) + 'px Archivo, Arial, sans-serif'; }
+  function F(px, stretch) { return stretch === 'normal' ? '800 normal ' + Math.round(px) + 'px Archivo, Arial, sans-serif' : '400 ' + Math.round(px) + 'px Anton, Impact, sans-serif'; }
   function fit(ctx, text, maxW, maxPx, stretch) {
     var px = maxPx;
     ctx.font = F(px, stretch);
@@ -100,7 +100,7 @@
       c.drawImage(im, w * .56, h * .14, h * .72, h * .72);
       return;
     }
-    c.fillStyle = m.ink; fit(c, m.t, w * .56, h * .2); c.fillText(m.t, pad, h * .25);
+    c.fillStyle = m.ink; fit(c, m.t, w * .56, h * .2); c.fillText(m.t, pad, h * .26);
     c.fillStyle = m.acc; c.fillRect(pad, h * .31, w * .13, h * .022);
     m.rows.forEach(function (r, i) {
       var y = h * (.47 + i * .185);
@@ -111,7 +111,7 @@
   }
   function drawVert(c, w, h, m, imgs) {
     c.fillStyle = m.bg; c.fillRect(0, 0, w, h);
-    c.fillStyle = m.ink; fit(c, m.t, w * .84, w * .36); c.fillText(m.t, w * .08, h * .2);
+    c.fillStyle = m.ink; fit(c, m.t, w * .84, w * .48); c.fillText(m.t, w * .08, h * .2);
     c.drawImage(imgs[m.img], w * .1, h * .3, w * .8, w * .8);
     c.fillStyle = m.acc; c.fillRect(w * .08, h * .78, w * .84, h * .12);
     c.fillStyle = m.bg; fit(c, m.sub, w * .72, h * .06); c.fillText(m.sub, w * .14, h * .86);
@@ -165,10 +165,10 @@
       var pa = fit(c, a, maxW, p); c.fillText(a, x0 + (maxW - c.measureText(a).width) / 2, hEach * .5);
       var pb = fit(c, b, maxW, p); c.fillText(b, x0 + (maxW - c.measureText(b).width) / 2, hEach * .5 + Math.max(pa, pb) * .98);
     }
-    row(0, function () { c.fillStyle = MAG; c.fillRect(0, 0, W, hEach); two('TODA SU CADENA,', 'AL MISMO TIEMPO', INK, .36); });
-    row(1, function () { c.fillStyle = RED; c.fillRect(0, 0, W, hEach); two('ALMUERZO', 'DESDE LAS 11:00', GOLD, .34); });
-    row(2, function () { c.fillStyle = LIME; c.fillRect(0, 0, W, hEach); two('FIN DE SEMANA', 'EN TODOS LOS LOCALES', NIGHT, .3); });
-    row(3, function () { c.fillStyle = CREAM; c.fillRect(0, 0, W, hEach); two('NUEVO PRECIO', 'EN TODA LA CADENA', BROWN, .34); });
+    row(0, function () { c.fillStyle = MAG; c.fillRect(0, 0, W, hEach); two('TODA SU CADENA,', 'AL MISMO TIEMPO', INK, .44); });
+    row(1, function () { c.fillStyle = RED; c.fillRect(0, 0, W, hEach); two('ALMUERZO', 'DESDE LAS 11:00', GOLD, .44); });
+    row(2, function () { c.fillStyle = LIME; c.fillRect(0, 0, W, hEach); two('FIN DE SEMANA', 'EN TODOS LOS LOCALES', NIGHT, .44); });
+    row(3, function () { c.fillStyle = CREAM; c.fillRect(0, 0, W, hEach); two('NUEVO PRECIO', 'EN TODA LA CADENA', BROWN, .44); });
     return { canvas: canvas, rows: 4 };
   }
 
@@ -637,7 +637,7 @@
     function load(src) { return new Promise(function (res, rej) { var i = new Image(); i.onload = function () { res(i); }; i.onerror = rej; i.src = src; }); }
     var FOODS = ['burger', 'fries', 'cup', 'coffee', 'icecream', 'arepa'];
     var wait = FOODS.map(function (n) { return load(window.SIGNUM_FOOD_URI(n)); });
-    wait.push((document.fonts && document.fonts.load) ? Promise.race([document.fonts.load('800 60px Archivo'), new Promise(function (r) { setTimeout(r, 1500); })]) : Promise.resolve());
+    wait.push((document.fonts && document.fonts.load) ? Promise.race([Promise.all([document.fonts.load('800 60px Archivo'), document.fonts.load('400 60px Anton', '2×1 Ñáéíóú')]), new Promise(function (r) { setTimeout(r, 2000); })]) : Promise.resolve());
     return Promise.all(wait).then(function (r) {
       var imgs = {}; FOODS.forEach(function (n, i) { imgs[n] = r[i]; });
       atlas = buildAtlas(C.atlas, imgs);
