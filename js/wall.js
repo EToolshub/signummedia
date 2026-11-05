@@ -45,7 +45,7 @@
     return out;
   }
 
-  /* ---------- Contenido: atlas con 3 piezas reales y tiles genéricos por código ---------- */
+  /* ---------- Contenido: menús genéricos de comida rápida, sin marcas, dibujados por código ---------- */
   function F(px, stretch) { return '800 ' + (stretch || 'expanded') + ' ' + Math.round(px) + 'px Archivo, Arial, sans-serif'; }
   function fit(ctx, text, maxW, maxPx, stretch) {
     var px = maxPx;
@@ -68,31 +68,53 @@
     ctx.moveTo(-s, -s * .22); ctx.lineTo(s * .2, -s * .22); ctx.lineTo(s * .2, -s * .62); ctx.lineTo(s, 0); ctx.lineTo(s * .2, s * .62); ctx.lineTo(s * .2, s * .22); ctx.lineTo(-s, s * .22); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
-  function tileH(name) {
-    var draws = {
-      almuerzo: function (c, w, h) { c.fillStyle = MAG; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, 'Almuerzo', w * .86, 92); c.fillText('Almuerzo', w * .07, h * .42); fit(c, 'ejecutivo', w * .86, 92); c.fillText('ejecutivo', w * .07, h * .68); c.fillStyle = NIGHT; c.fillRect(w * .07, h * .78, w * .32, h * .12); c.fillStyle = INK; c.font = F(h * .08); c.fillText('12:00', w * .1, h * .87); },
-      desayuno: function (c, w, h) { c.fillStyle = SURF; c.fillRect(0, 0, w, h); c.fillStyle = LIME; fit(c, 'Desayuno', w * .86, 88); c.fillText('Desayuno', w * .07, h * .38); c.fillStyle = INK; c.font = F(h * .1, 'normal'); c.fillText('De lunes a viernes', w * .07, h * .55); c.fillStyle = MAG; c.fillRect(w * .07, h * .68, w * .86, h * .16); c.fillStyle = INK; c.font = F(h * .1); c.fillText('06:00', w * .1, h * .8); },
-      finde: function (c, w, h) { c.fillStyle = LIME; c.fillRect(0, 0, w, h); c.fillStyle = NIGHT; fit(c, 'Fin de', w * .8, 110); c.fillText('Fin de', w * .07, h * .42); fit(c, 'semana', w * .86, 110); c.fillText('semana', w * .07, h * .78); },
-      aviso: function (c, w, h) { c.fillStyle = INK; c.fillRect(0, 0, w, h); c.fillStyle = PUR; fit(c, 'Aviso interno', w * .86, 54); c.fillText('Aviso interno', w * .07, h * .27); c.fillStyle = SURF; for (var i = 0; i < 4; i++) c.fillRect(w * .07, h * (.4 + i * .13), w * (.86 - i * .16), h * .06); },
-      reloj: function (c, w, h) { c.fillStyle = NIGHT; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, '12:45', w * .84, 150); c.fillText('12:45', w * .08, h * .62); c.fillStyle = MAG; c.fillRect(w * .08, h * .74, w * .84 * .6, h * .05); c.fillStyle = PUR; c.fillRect(w * .08 + w * .84 * .6, h * .74, w * .84 * .4, h * .05); },
-      rombos: function (c, w, h) { c.fillStyle = SURF; c.fillRect(0, 0, w, h); var cols = [MAG, LIME, PUR, '#E64DA8']; for (var i = 0; i < 6; i++) rombo(c, w * (.12 + i * .16), h * (i % 2 ? .66 : .34), h * .46, cols[i % 4], h * .034); },
-      planta: function (c, w, h) { c.fillStyle = PUR; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, 'Planta 2', w * .84, 84); c.fillText('Planta 2', w * .08, h * .42); arrow(c, w * .72, h * .7, h * .17, LIME); c.font = F(h * .1, 'normal'); c.fillStyle = INK; c.fillText('Cines y tiendas', w * .08, h * .74); },
-      dosxuno: function (c, w, h) { c.fillStyle = NIGHT; c.fillRect(0, 0, w, h); c.fillStyle = MAG; fit(c, '2×1', w * .84, 190); c.fillText('2×1', w * .08, h * .66); c.fillStyle = INK; c.font = F(h * .09, 'normal'); c.fillText('Solo esta semana', w * .08, h * .86); },
-      cartelera: function (c, w, h) { c.fillStyle = PUR2; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, 'Cartelera', w * .84, 70); c.fillText('Cartelera', w * .08, h * .27); var pal = [MAG, INK, LIME]; for (var i = 0; i < 3; i++) { c.fillStyle = pal[i]; c.fillRect(w * (.08 + i * .29), h * .38, w * .26, h * .46); } },
-      turno: function (c, w, h) { c.fillStyle = SURF; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, 'Turno de hoy', w * .84, 48); c.fillText('Turno de hoy', w * .08, h * .24); var v = [.4, .62, .5, .82, .7, .95, .58, .74]; for (var i = 0; i < v.length; i++) { c.fillStyle = i === 5 ? MAG : '#7B3FA8'; c.fillRect(w * (.08 + i * .105), h * (.9 - v[i] * .56), w * .08, h * v[i] * .56); } }
-    };
-    return draws[name];
+  var CREAM = '#FFF4DF', BROWN = '#2A1408', RED = '#E8372C', GOLD = '#FFC815', PINK = '#FCE4EC';
+  var MENUS = {
+    combos: { bg: CREAM, ink: BROWN, acc: RED, t: 'Combos', img: 'burger', rows: [['Doble con papas', '5,99'], ['Pollo crujiente', '5,50'], ['Alitas y bebida', '6,50']] },
+    desayuno: { bg: GOLD, ink: BROWN, acc: RED, t: 'Desayuno', img: 'coffee', rows: [['Arepa con queso', '2,50'], ['Empanada y café', '3,00'], ['Cachito y jugo', '3,50']] },
+    almuerzo: { bg: RED, ink: '#FFFFFF', acc: GOLD, t: 'Almuerzo', img: 'burger', rows: [['Combo doble', '5,99'], ['Pollo y papas', '5,50'], ['Ensalada', '4,00']] },
+    cena: { bg: SURF, ink: '#FFFFFF', acc: LIME, t: 'Cena', img: 'fries', rows: [['Combo familiar', '11,99'], ['Dos hamburguesas', '8,50'], ['Alitas (12)', '9,00']] },
+    merienda: { bg: PINK, ink: PUR2, acc: MAG, t: 'Merienda', img: 'icecream', rows: [['Helado doble', '2,50'], ['Tequeños (6)', '3,00'], ['Malteada', '3,50']] },
+    papas: { bg: BROWN, ink: '#FFFFFF', acc: GOLD, t: 'Papas', img: 'fries', rows: [['Pequeñas', '1,50'], ['Medianas', '2,00'], ['Grandes', '2,50']] },
+    bebidas: { bg: PUR, ink: '#FFFFFF', acc: LIME, t: 'Bebidas', img: 'cup', rows: [['Refresco', '1,50'], ['Jugo natural', '2,00'], ['Malteada', '3,50']] },
+    dosxuno: { bg: MAG, ink: '#FFFFFF', acc: GOLD, t: '2×1', big: 1, sub: 'En combos, solo hoy', img: 'fries' },
+    nuevo: { bg: LIME, ink: NIGHT, acc: RED, t: 'Nuevo', big: 1, sub: 'Doble crujiente', img: 'burger' },
+    arepas: { bg: CREAM, ink: BROWN, acc: PUR, t: 'Arepas', img: 'arepa', rows: [['Reina pepiada', '3,50'], ['Queso de mano', '3,00'], ['Pabellón', '4,50']] },
+    precios: { bg: NIGHT, ink: '#FFFFFF', acc: GOLD, t: 'Promoción', img: 'cup', rows: [['Combo y bebida', '6,50'], ['Papas y bebida', '3,00'], ['Dos helados', '3,50']] },
+    cafe: { bg: '#6B3A1E', ink: '#FFFFFF', acc: GOLD, t: 'Café', img: 'coffee', rows: [['Negrito', '1,00'], ['Con leche', '1,50'], ['Y cachito', '3,50']] }
+  };
+  var VERT = {
+    oferta: { bg: RED, ink: '#FFFFFF', acc: GOLD, t: '2×1', sub: 'Combos', img: 'burger' },
+    nuevo: { bg: LIME, ink: NIGHT, acc: RED, t: 'Nuevo', sub: 'Doble', img: 'burger' },
+    helado: { bg: PINK, ink: PUR2, acc: MAG, t: 'Helado', sub: 'Doble', img: 'icecream' },
+    bebida: { bg: PUR, ink: '#FFFFFF', acc: LIME, t: 'Bebida', sub: 'Grande', img: 'cup' },
+    cafe: { bg: CREAM, ink: BROWN, acc: RED, t: 'Café', sub: 'Mañanas', img: 'coffee' },
+    papas: { bg: GOLD, ink: BROWN, acc: RED, t: 'Papas', sub: 'Grandes', img: 'fries' }
+  };
+  function drawMenu(c, w, h, m, imgs) {
+    c.fillStyle = m.bg; c.fillRect(0, 0, w, h);
+    var pad = w * .055, im = imgs[m.img];
+    if (m.big) {
+      c.fillStyle = m.ink; fit(c, m.t, w * .56, h * .46); c.fillText(m.t, pad, h * .56);
+      c.font = F(h * .085, 'normal'); c.fillText(m.sub, pad, h * .74);
+      c.drawImage(im, w * .56, h * .14, h * .72, h * .72);
+      return;
+    }
+    c.fillStyle = m.ink; fit(c, m.t, w * .56, h * .2); c.fillText(m.t, pad, h * .25);
+    c.fillStyle = m.acc; c.fillRect(pad, h * .31, w * .13, h * .022);
+    m.rows.forEach(function (r, i) {
+      var y = h * (.47 + i * .185);
+      c.fillStyle = m.ink; c.font = '650 normal ' + Math.round(h * .068) + 'px Archivo, Arial, sans-serif'; c.fillText(r[0], pad, y);
+      c.fillStyle = m.acc; c.font = F(h * .082, 'normal'); var pw = c.measureText(r[1]).width; c.fillText(r[1], w * .63 - pw, y);
+    });
+    c.drawImage(im, w * .655, h * .2, w * .31, w * .31);
   }
-  function tileV(name) {
-    var draws = {
-      hoy: function (c, w, h) { c.fillStyle = MAG; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, 'Hoy', w * .84, 120); c.fillText('Hoy', w * .08, h * .22); rombo(c, w * .5, h * .58, w * .62, NIGHT); rombo(c, w * .5, h * .58, w * .3, LIME); },
-      nuevo: function (c, w, h) { c.fillStyle = LIME; c.fillRect(0, 0, w, h); c.fillStyle = NIGHT; c.save(); c.translate(w * .72, h * .94); c.rotate(-Math.PI / 2); fit(c, 'Nuevo', h * .88, w * .72); c.fillText('Nuevo', 0, 0); c.restore(); },
-      salida: function (c, w, h) { c.fillStyle = PUR; c.fillRect(0, 0, w, h); arrow(c, w * .5, h * .34, w * .3, INK, true); c.fillStyle = INK; fit(c, 'Salida', w * .84, 60); c.fillText('Salida', w * .08, h * .7); c.font = F(w * .13, 'normal'); c.fillText('Nivel 1', w * .08, h * .8); },
-      rombos: function (c, w, h) { c.fillStyle = SURF; c.fillRect(0, 0, w, h); var cols = [MAG, LIME, '#E64DA8', INK]; for (var i = 0; i < 5; i++) rombo(c, w * .5, h * (.13 + i * .185), w * .58, cols[i % 4], w * .05); },
-      hora: function (c, w, h) { c.fillStyle = NIGHT; c.fillRect(0, 0, w, h); c.fillStyle = INK; fit(c, '18', w * .84, 130); c.fillText('18', w * .08, h * .34); c.fillStyle = MAG; fit(c, '00', w * .84, 130); c.fillText('00', w * .08, h * .6); c.fillStyle = INK; c.fillRect(w * .08, h * .72, w * .84, h * .02); c.fillRect(w * .08, h * .78, w * .5, h * .02); },
-      cena: function (c, w, h) { c.fillStyle = PUR2; c.fillRect(0, 0, w, h); c.fillStyle = MAG; c.fillRect(0, h * .62, w, h * .38); c.fillStyle = INK; c.save(); c.translate(w * .68, h * .94); c.rotate(-Math.PI / 2); fit(c, 'Esta noche', h * .88, w * .54); c.fillText('Esta noche', 0, 0); c.restore(); }
-    };
-    return draws[name];
+  function drawVert(c, w, h, m, imgs) {
+    c.fillStyle = m.bg; c.fillRect(0, 0, w, h);
+    c.fillStyle = m.ink; fit(c, m.t, w * .84, w * .36); c.fillText(m.t, w * .08, h * .2);
+    c.drawImage(imgs[m.img], w * .1, h * .3, w * .8, w * .8);
+    c.fillStyle = m.acc; c.fillRect(w * .08, h * .78, w * .84, h * .12);
+    c.fillStyle = m.bg; fit(c, m.sub, w * .72, h * .06); c.fillText(m.sub, w * .14, h * .86);
   }
 
   function buildAtlas(size, imgs) {
@@ -100,8 +122,8 @@
     var ctx = canvas.getContext('2d'), s = size / 2048;
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, size, size);
     var CW = 512, CH = 307, VW = 256, VH = 569;
-    var names = ['clasicos', 'nuevaera', 'almuerzo', 'desayuno', 'finde', 'aviso', 'reloj', 'rombos', 'planta', 'dosxuno', 'cartelera', 'turno'];
-    var vnames = ['totem', 'hoy', 'nuevo', 'salida', 'rombos', 'hora', 'cena', 'totem'];
+    var names = Object.keys(MENUS);
+    var vnames = Object.keys(VERT);
     var H = {}, V = {}, avgC = document.createElement('canvas'); avgC.width = avgC.height = 4;
     var avgX = avgC.getContext('2d', { willReadFrequently: true });
     function reg(x, y, w, h, store, key) {
@@ -116,7 +138,7 @@
       ctx.save(); ctx.scale(s, s); ctx.translate(x, y);
       ctx.beginPath(); ctx.rect(0, 0, CW, CH); ctx.clip();
       ctx.textBaseline = 'alphabetic';
-      if (n === 'clasicos' || n === 'nuevaera') ctx.drawImage(imgs[n], 0, 0, CW, CH); else tileH(n)(ctx, CW, CH);
+      drawMenu(ctx, CW, CH, MENUS[n], imgs);
       ctx.restore();
       reg(x, y, CW, CH, H, n);
     });
@@ -124,9 +146,9 @@
       var x = i * VW, y = 3 * CH;
       ctx.save(); ctx.scale(s, s); ctx.translate(x, y);
       ctx.beginPath(); ctx.rect(0, 0, VW, VH); ctx.clip();
-      if (n === 'totem') ctx.drawImage(imgs.totem, 0, 0, VW, VH); else tileV(n)(ctx, VW, VH);
+      ctx.textBaseline = 'alphabetic'; drawVert(ctx, VW, VH, VERT[n], imgs);
       ctx.restore();
-      reg(x, y, VW, VH, V, n + (n === 'totem' ? i : ''));
+      reg(x, y, VW, VH, V, n);
     });
     return { canvas: canvas, H: H, V: V, hKeys: Object.keys(H), vKeys: Object.keys(V) };
   }
@@ -143,10 +165,10 @@
       var pa = fit(c, a, maxW, p); c.fillText(a, x0 + (maxW - c.measureText(a).width) / 2, hEach * .5);
       var pb = fit(c, b, maxW, p); c.fillText(b, x0 + (maxW - c.measureText(b).width) / 2, hEach * .5 + Math.max(pa, pb) * .98);
     }
-    row(0, function () { c.fillStyle = MAG; c.fillRect(0, 0, W, hEach); two('TODA SU RED,', 'AL MISMO TIEMPO', INK, .36); });
-    row(1, function () { c.fillStyle = SURF; c.fillRect(0, 0, W, hEach); for (var i = 0; i < 26; i++) rombo(c, W * (i / 25), hEach * (i % 2 ? .78 : .22), hEach * .26, i % 3 ? PUR : MAG, hEach * .02); two('ALMUERZO EJECUTIVO', 'A LAS 12:00', LIME, .3); });
+    row(0, function () { c.fillStyle = MAG; c.fillRect(0, 0, W, hEach); two('TODA SU CADENA,', 'AL MISMO TIEMPO', INK, .36); });
+    row(1, function () { c.fillStyle = RED; c.fillRect(0, 0, W, hEach); two('ALMUERZO', 'DESDE LAS 11:00', GOLD, .34); });
     row(2, function () { c.fillStyle = LIME; c.fillRect(0, 0, W, hEach); two('FIN DE SEMANA', 'EN TODOS LOS LOCALES', NIGHT, .3); });
-    row(3, function () { c.fillStyle = INK; c.fillRect(0, 0, W, hEach); two('AVISO INTERNO:', 'NUEVO HORARIO', PUR2, .34); });
+    row(3, function () { c.fillStyle = CREAM; c.fillRect(0, 0, W, hEach); two('NUEVO PRECIO', 'EN TODA LA CADENA', BROWN, .34); });
     return { canvas: canvas, rows: 4 };
   }
 
@@ -241,9 +263,9 @@
     var w0 = window.innerWidth;
     var tier = w0 < 700 ? 'm' : w0 < 1100 ? 't' : 'd';
     var CONF = {
-      d: { rows: [27, 27, 27, 25, 25, 25, 23, 23, 23, 21, 21, 21, 17, 15], R: 15, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 36, camZ: 12, camY: 3.0, tgtY: .95, atlas: 2048, central: .62 },
+      d: { rows: [27, 27, 27, 25, 25, 25, 23, 23, 23, 21, 21, 21, 17, 15], R: 15, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 36, camZ: 12, camY: 3.0, tgtY: .95, atlas: 3072, central: .62 },
       t: { rows: [19, 19, 19, 17, 17, 17, 17, 15, 15, 15, 15, 15], R: 12, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 36, camZ: 16, camY: 3.0, tgtY: 1.9, atlas: 2048, central: .62 },
-      m: { rows: [13, 13, 13, 13, 13, 11, 11, 11, 11, 11], R: 9.5, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1024, central: .82 }
+      m: { rows: [13, 13, 13, 13, 13, 11, 11, 11, 11, 11], R: 9.5, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1536, central: .82 }
     };
     var C = CONF[tier];
     var N = C.rows.reduce(function (a, b) { return a + b; }, 0);
@@ -260,7 +282,7 @@
     var dprMax = Math.min(window.devicePixelRatio || 1, 1.5), dpr = dprMax;
     renderer.setPixelRatio(dpr);
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-    renderer.setClearColor(0x0E0318, 1);
+    renderer.setClearColor(new THREE.Color().setRGB(14 / 255, 3 / 255, 24 / 255, THREE.LinearSRGBColorSpace), 1);
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(C.fov, 1, .1, 120);
@@ -325,7 +347,7 @@
     var uni = {
       uTime: { value: 0 }, uMorph: { value: 0 }, uWaveR: { value: 0 }, uWaveOn: { value: 0 }, uBand: { value: 1.7 }, uIntro: { value: RM ? 1 : 0 },
       uHover: { value: -5 }, uFocusId: { value: fIdx }, uFocus: { value: 0 }, uTint: { value: 0 }, uFloor: { value: floorY }, uOrigin: { value: new THREE.Vector3() },
-      uAtlas: { value: null }, uMural: { value: null }, uShade: { value: 1 }, uRes: { value: new THREE.Vector2(1, 1) }, uHaloK: { value: 1.9 }, uHaloAmp: { value: .1 }
+      uAtlas: { value: null }, uMural: { value: null }, uShade: { value: 0 }, uRes: { value: new THREE.Vector2(1, 1) }, uHaloK: { value: 1.9 }, uHaloAmp: { value: .1 }
     };
     function mat(extra) {
       var u = Object.assign({}, uni, extra.uniforms || {});
@@ -359,11 +381,10 @@
     }
     function touch() { aUVA.needsUpdate = aUVB.needsUpdate = aTM.needsUpdate = aAvg.needsUpdate = true; }
 
-    var MCOL = [[.84, .04, .52], [.2, .05, .3], [.71, .83, .2], [.96, .95, .98]];
-    var CAMP = [{ m: 0 }, { h: 'almuerzo', v: 'hoy' }, { m: 1 }, { mix: 1 }, { m: 2 }, { h: 'finde', v: 'nuevo' }, { m: 3 }, { h: 'rombos', v: 'rombos' }];
+    var MCOL = [[.84, .04, .52], [.91, .22, .17], [.71, .83, .2], [1, .96, .87]];
+    var CAMP = [{ m: 0 }, { h: 'almuerzo', v: 'oferta' }, { m: 1 }, { mix: 1 }, { m: 2 }, { h: 'cena', v: 'bebida' }, { m: 3 }, { h: 'dosxuno', v: 'papas' }];
     var campI = 0, wallMode = 'mix', focusForced = false, swapped = false;
     function fillMix(attrUV, texIdx, r) {
-      // Las piezas reales aparecen de vez en cuando, repartidas; el resto es contenido de muestra
       for (var i = 0; i < N; i++) {
         var it = items[i], cell;
         if (it.vert) cell = atlas.V[vKeys[Math.floor(r() * vKeys.length)]];
@@ -383,9 +404,9 @@
     function layoutS() {
       var asp = camera.aspect, dist = 10, seen = dist - .9, visH = 2 * seen * Math.tan(C.fov * Math.PI / 360), visW = visH * asp;
       var sw, cx, cy, ratio = 54.04 / 79.37;
-      if (asp > 1.25) { sw = Math.min(visW * .655, (visH * (asp > 1.75 ? .6 : .71)) / ratio); cx = visW * .135; cy = visH * (asp > 1.75 ? .14 : .09); }
-      else if (asp > .7) { sw = visW * .86; cx = 0; cy = visH * .13; }
-      else { sw = visW * .93; cx = 0; cy = visH * .13; }
+      if (asp > 1.25) { sw = Math.min(visW * .62, (visH * .62) / ratio); cx = 0; cy = visH * .1; }
+      else if (asp > .7) { sw = visW * .84; cx = 0; cy = visH * .09; }
+      else { sw = visW * .92; cx = 0; cy = visH * .15; }
       var yC = yMax * .45;
       endCam.set(0, yC, zS + dist); endTgt.set(0, yC, zS);
       if (!sOrder) {
@@ -416,6 +437,7 @@
       camera.aspect = size.w / size.h; camera.updateProjectionMatrix();
       uni.uRes.value.set(size.w * dpr, size.h * dpr);
       heroPos.set(0, C.camY, C.camZ); heroTgt.set(0, C.tgtY - Math.max(0, camera.aspect - 1.6) * 1.6, -C.R * .3);
+      fitHero();
       var f = items[fIdx], ry = f.ry, nx = Math.sin(ry), nz = Math.cos(ry);
       var ft = Math.tan(C.fov * Math.PI / 360), frac = camera.aspect > 1.2 ? .44 : camera.aspect > .7 ? .62 : .8;
       var fd = (1 / frac) / (camera.aspect * 2 * ft);
@@ -423,6 +445,26 @@
       layoutS();
       camUpdate(scene2.sp);
       render();
+    }
+
+    // La portada reserva abajo su bloque de texto: el muro se encuadra solo en la zona libre
+    var heroShift = 0;
+    function fitHero() {
+      var free = opt.getFree ? opt.getFree() : { top: 0, bottom: size.h };
+      var pT = new THREE.Vector3(), pB = new THREE.Vector3();
+      function measure() {
+        camera.clearViewOffset();
+        camera.position.copy(heroPos); camera.lookAt(heroTgt); camera.updateMatrixWorld(); camera.updateProjectionMatrix();
+        pT.set(0, yMax, -C.R).project(camera); pB.set(0, 0, -C.R).project(camera);
+        return { t: (-pT.y * .5 + .5) * size.h, b: (-pB.y * .5 + .5) * size.h };
+      }
+      var m = measure(), want = Math.max(120, (free.bottom - free.top) * .96);
+      var th = halfArc / C.R, pL = new THREE.Vector3(-C.R * Math.sin(th), yMax * .5, -C.R * Math.cos(th)).project(camera);
+      var wallW = Math.abs(pL.x) * size.w;
+      var k = clamp(Math.min((m.b - m.t) / want, wallW / (size.w * 1.08)), .45, 1.9);
+      heroPos.z = (heroPos.z + C.R) * k - C.R;
+      m = measure();
+      heroShift = (m.t + m.b) / 2 - (free.top + free.bottom) / 2;
     }
 
     /* ---- Interacción ---- */
@@ -498,6 +540,8 @@
       cA.x += ptr.sx * 2.2 * par; cA.y += -ptr.sy * .9 * par;
       cA.z -= c2 * .9;
       camera.position.copy(cA); camera.lookAt(cB);
+      var sh = heroShift * (1 - a);
+      if (Math.abs(sh) > .5) camera.setViewOffset(size.w, size.h, 0, sh, size.w, size.h); else camera.clearViewOffset();
     }
 
     function render() {
@@ -526,20 +570,20 @@
       uni.uMorph.value = smooth(.3, .9, sp) ;
       uni.uFocus.value = smooth(.06, .24, sp) * (1 - smooth(.28, .42, sp));
       uni.uTint.value = smooth(.5, .86, sp);
-      uni.uShade.value = (1 - .3 * smooth(0, .12, sp)) * (1 - smooth(.62, .8, sp));
+      uni.uShade.value = 0;
       uni.uHaloAmp.value = lerp(tier === 'm' ? .1 : .13, .34, uni.uTint.value);
       uni.uHaloK.value = lerp(1.9, 1.5, uni.uTint.value);
       meshMirror.visible = quality > 0 && uni.uMorph.value < .85;
       meshHalo.visible = quality > 1 || uni.uTint.value > 0;
 
-      // La protagonista muestra una pieza real; el resto cambia a mezcla mientras está a oscuras
+      // La protagonista muestra un menú completo; el resto cambia a mezcla mientras está a oscuras
       if (sp > .025 && !focusForced) {
         if (wave.on) { commit(); cb(N, N, 'end', wave.user); }
-        setSlot(aUVA, 0, fIdx, atlas.H.clasicos); setSlot(aUVB, 1, fIdx, atlas.H.clasicos); touch(); focusForced = true;
+        setSlot(aUVA, 0, fIdx, atlas.H.combos); setSlot(aUVB, 1, fIdx, atlas.H.combos); touch(); focusForced = true;
       }
       if (sp > .2 && !swapped) {
         var rs = rng(5150);
-        fillMix(aUVA, 0, rs); setSlot(aUVA, 0, fIdx, atlas.H.clasicos);
+        fillMix(aUVA, 0, rs); setSlot(aUVA, 0, fIdx, atlas.H.combos);
         aUVB.array.set(aUVA.array);
         for (var si = 0; si < N; si++) { aTM.setY(si, aTM.getX(si)); aAvg.setY(si, aAvg.getX(si)); }
         touch(); swapped = true; wallMode = 'mix';
@@ -591,10 +635,12 @@
 
     /* ---- Carga de contenido ---- */
     function load(src) { return new Promise(function (res, rej) { var i = new Image(); i.onload = function () { res(i); }; i.onerror = rej; i.src = src; }); }
-    var T = window.SIGNUM_TEX || {};
-    var wait = [load(T.arturosClasicos), load(T.arturosNuevaEra), load(T.alquadradoTotem), (document.fonts && document.fonts.load) ? Promise.race([document.fonts.load('800 60px Archivo'), new Promise(function (r) { setTimeout(r, 1500); })]) : Promise.resolve()];
+    var FOODS = ['burger', 'fries', 'cup', 'coffee', 'icecream', 'arepa'];
+    var wait = FOODS.map(function (n) { return load(window.SIGNUM_FOOD_URI(n)); });
+    wait.push((document.fonts && document.fonts.load) ? Promise.race([document.fonts.load('800 60px Archivo'), new Promise(function (r) { setTimeout(r, 1500); })]) : Promise.resolve());
     return Promise.all(wait).then(function (r) {
-      atlas = buildAtlas(C.atlas, { clasicos: r[0], nuevaera: r[1], totem: r[2] });
+      var imgs = {}; FOODS.forEach(function (n, i) { imgs[n] = r[i]; });
+      atlas = buildAtlas(C.atlas, imgs);
       hKeys = atlas.hKeys; vKeys = atlas.vKeys;
       var muralW = tier === 'm' ? 1024 : 2048;
       mural = buildMurals(muralW, wallAspect, C.central);
@@ -604,14 +650,9 @@
       tm.flipY = false; tm.generateMipmaps = true; tm.minFilter = THREE.LinearMipmapLinearFilter; tm.magFilter = THREE.LinearFilter; tm.anisotropy = tex.anisotropy; tm.colorSpace = THREE.NoColorSpace;
       uni.uAtlas.value = tex; uni.uMural.value = tm;
 
-      // Mezcla inicial: reparte las piezas reales en el centro para que se lean
       var ri = rng(12);
       fillMix(aUVA, 0, ri);
-      items.forEach(function (it, i) {
-        if (it.vert && Math.abs(it.x) < 8 && ri() < .4) setSlot(aUVA, 0, i, atlas.V['totem0']);
-        else if (!it.vert && Math.abs(it.x) < 9 && ri() < .14) setSlot(aUVA, 0, i, atlas.H[ri() < .5 ? 'clasicos' : 'nuevaera']);
-      });
-      setSlot(aUVA, 0, fIdx, atlas.H.clasicos);
+      setSlot(aUVA, 0, fIdx, atlas.H.combos);
       aUVB.array.set(aUVA.array);
       for (var i = 0; i < N; i++) { aTM.setY(i, aTM.getX(i)); aAvg.setY(i, aAvg.getX(i)); }
       touch();

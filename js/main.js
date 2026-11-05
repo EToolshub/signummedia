@@ -42,7 +42,7 @@
       // Agrupa por sección para el escalonado
       el.dataset.rg = '1';
     });
-    $$('main section, .real').forEach(function (sec) {
+    $$('main section').forEach(function (sec) {
       var items = $$('[data-r]', sec).filter(function (x) { return !x.dataset.rd; });
       if (!items.length) return;
       items.forEach(function (x) { x.dataset.rd = '1'; });
@@ -53,6 +53,9 @@
         ScrollTrigger.create({ trigger: x, start: 'top 92%', once: true, onEnter: function () { gsap.to(x, { opacity: 1, y: 0, duration: .85, ease: 'expo.out', delay: (i % 4) * .075, clearProps: 'transform' }); } });
       });
     });
+    // La foto de referencia se asienta despacio con el scroll
+    var pic = $('#menusPic');
+    if (pic) gsap.fromTo(pic, { scale: 1.1 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: pic, start: 'top bottom', end: 'bottom top', scrub: .6 } });
     // Tabla de contraste: la columna Signum sube como un telón y las filas entran después
     var wrap = $('#cmpWrap');
     if (wrap) {
@@ -116,7 +119,7 @@
     return { o: up * (1 - down), y: (1 - up) * 46 - down * 46 };
   }
   function onScene(sp) {
-    var a = wind(sp, .03, .11, .25, .33), b = wind(sp, .56, .68, 2, 3), c = wind(sp, .74, .84, 2, 3);
+    var a = wind(sp, .03, .11, .46, .54), b = wind(sp, .56, .66, 2, 3), c = wind(sp, .68, .78, 2, 3);
     beats.b1.style.opacity = a.o; beats.b1.style.transform = 'translate3d(0,' + a.y.toFixed(1) + 'px,0)'; beats.b1.style.visibility = a.o < .01 ? 'hidden' : 'visible';
     beats.b2.style.opacity = b.o; beats.b2.style.transform = 'translate3d(0,' + b.y.toFixed(1) + 'px,0)'; beats.b2.style.visibility = b.o < .01 ? 'hidden' : 'visible';
     beats.b3.style.opacity = c.o; beats.b3.style.transform = 'translate3d(0,' + c.y.toFixed(1) + 'px,0)'; beats.b3.style.visibility = c.o < .01 ? 'hidden' : 'visible';
@@ -126,13 +129,15 @@
     var canvas = $('#wall'), cN = $('#cN'), cT = $('#cT'), hint = $('#counterHint'), live = $('#counterLive'), status = $('.hero-status');
     if (!window.THREE) return Promise.resolve(false);
     var touch = !window.matchMedia('(hover: hover)').matches;
-    hint.textContent = touch ? 'Contenido de muestra y piezas reales. Toque cualquier pantalla: la orden sale de ahí.' : 'Contenido de muestra y piezas reales. Pulse cualquier pantalla: la orden sale de ahí.';
+    hint.textContent = touch ? 'Demostración con contenido de muestra. Toque una pantalla.' : 'Demostración con contenido de muestra. Pulse una pantalla.';
+    var heroIn = $('.hero-in'), navEl = $('#nav');
     var res = window.SignumWall.init({
       canvas: canvas, reduced: RM, getProgress: medioP, onScene: RM ? null : onScene,
+      getFree: function () { return { top: navEl.offsetHeight, bottom: window.innerHeight - heroIn.offsetHeight }; },
       onCount: function (n, tot, phase, user) {
         cN.textContent = n; cT.textContent = tot;
         status.classList.toggle('air', phase === 'end');
-        if (phase === 'end' && user) live.textContent = 'Simulación: ' + tot + ' de ' + tot + ' pantallas actualizadas.';
+        if (phase === 'end' && user) live.textContent = 'Demostración: ' + tot + ' de ' + tot + ' pantallas actualizadas.';
       }
     });
     if (res === false) return Promise.resolve(false);
@@ -150,76 +155,14 @@
     }).catch(function (e) { console.warn('[boceto] muro: ' + e.message); return false; });
   }
 
-  /* ---------- Trabajo real: desplazamiento horizontal fijado ---------- */
-  var real = { on: false, sp: 0 };
-  function initReal() {
-    var sec = $('#real'), track = $('#realTrack'), figs = $$('.scr', track);
-    function measure() {
-      real.on = !RM && window.innerWidth >= 1100;
-      root.classList.toggle('real-wide', real.on);
-      track.style.transform = '';
-      if (real.on) { real.dist = Math.max(0, track.scrollWidth - window.innerWidth); sec.style.height = (window.innerHeight + real.dist * 1.1) + 'px'; }
-      else sec.style.height = '';
-    }
-    real.measure = measure; measure();
-    real.tick = function (dt) {
-      if (!real.on) return;
-      var r = sec.getBoundingClientRect(), range = sec.offsetHeight - window.innerHeight, p = clamp(-r.top / Math.max(1, range), 0, 1);
-      if (r.bottom < -100 || r.top > window.innerHeight + 100) return;
-      real.sp += (p - real.sp) * (1 - Math.exp(-dt * 9));
-      track.style.transform = 'translate3d(' + (-real.sp * real.dist).toFixed(1) + 'px,0,0)';
-    };
-    // Encendido de cada pantalla: la tapa se abre al entrar
-    if (RM) $$('img', track).forEach(function (im) { im.loading = 'eager'; });
-    if (!RM && hasGsap) figs.forEach(function (f, i) {
-      var off = $('.scr-off', f), cap = $('figcaption', f);
-      gsap.set(off, { opacity: 1 });
-      gsap.set(cap, { opacity: 0, y: 14 });
-      var done = false;
-      var check = function () { if (done) return; var b = f.getBoundingClientRect(); if (b.left < window.innerWidth * .82 && b.right > 0 && b.top < window.innerHeight * .9 && b.bottom > 0) { done = true; gsap.to(off, { opacity: 0, duration: .9, ease: 'steps(7)' }); gsap.to(cap, { opacity: 1, y: 0, duration: .7, delay: .3, ease: 'expo.out' }); } };
-      real['c' + i] = check; (real.checks = real.checks || []).push(check);
-    });
-  }
-
-  /* ---------- Acordeón de entornos ---------- */
-  function initAcc() {
-    var ul = $('#acc'), ps = $$('.acc-p', ul), secVisible = false, hoverT;
-    if (RM) { ps.forEach(function (x) { x.classList.add('is-open'); $('.acc-b', x).setAttribute('aria-expanded', 'true'); }); return; }
-    function setSrc(v) { if (!v.src && v.dataset.src) { v.src = v.dataset.src; } }
-    function play(p) { var v = $('video', p); setSrc(v); if (RM) return; var q = v.play(); if (q && q.catch) q.catch(function () {}); }
-    function stop(p) { var v = $('video', p); if (!v.paused) v.pause(); }
-    function open(p) {
-      ps.forEach(function (x) {
-        var o = x === p;
-        x.classList.toggle('is-open', o);
-        $('.acc-b', x).setAttribute('aria-expanded', o ? 'true' : 'false');
-        if (o && secVisible) play(x); else stop(x);
-      });
-    }
-    ps.forEach(function (p) {
-      var b = $('.acc-b', p);
-      b.addEventListener('click', function () { open(p); });
-      b.addEventListener('focus', function () { if (b.matches(':focus-visible')) open(p); });
-      // Solo con movimiento real: un puntero quieto no debe abrir paneles al desplazar la página
-      p.addEventListener('pointermove', function (e) { if (e.pointerType === 'touch' || (!e.movementX && !e.movementY) || p.classList.contains('is-open')) return; clearTimeout(hoverT); hoverT = setTimeout(function () { open(p); }, 90); });
-      p.addEventListener('pointerleave', function () { clearTimeout(hoverT); });
-    });
-    var io = new IntersectionObserver(function (es) {
-      secVisible = es[0].isIntersecting;
-      var cur = $('.is-open', ul);
-      if (secVisible && cur) play(cur); else ps.forEach(stop);
-    }, { threshold: .2 });
-    io.observe(ul);
-  }
-
   /* ---------- Formulario ---------- */
   function initForm() {
     var form = $('#form'), ok = $('#formOk'), again = $('#formAgain');
     var FREE = /@(gmail|hotmail|outlook|yahoo|live|icloud|proton|protonmail)\./i;
     function msg(f) {
       var v = (f.value || '').trim();
-      if (f.tagName === 'SELECT' && !v) return f.id === 'fSector' ? 'Elija el sector de su empresa.' : 'Elija cuántas ubicaciones opera.';
-      if (!v) return { fEmpresa: 'Indique el nombre de su empresa.', fNombre: 'Indique su nombre y cargo.', fCorreo: 'Indique su correo corporativo.', fMsg: 'Cuéntenos qué necesita su red.' }[f.id];
+      if (f.tagName === 'SELECT' && !v) return 'Elija cuántas sucursales opera.';
+      if (!v) return { fEmpresa: 'Indique el nombre de su empresa.', fNombre: 'Indique su nombre y cargo.', fCorreo: 'Indique su correo corporativo.', fMsg: 'Cuéntenos qué necesita su cadena.' }[f.id];
       if (f.id === 'fCorreo') {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Escriba un correo válido, por ejemplo nombre@suempresa.com.';
         if (FREE.test(v)) return 'Use su correo corporativo, no uno personal.';
@@ -259,32 +202,18 @@
 
   safe(nav, 'nav');
   safe(function () { window.SignumProc.init({ reduced: RM }); }, 'proceso');
-  safe(initReal, 'real');
-  safe(initAcc, 'acordeón');
   safe(initForm, 'formulario');
   safe(function () { window.SignumConsole.init({ reduced: RM }); }, 'consola');
   safe(reveals, 'revelados');
 
-  // Primera demostración de la consola al entrar a la sección
-  var conIO = safe(function () {
-    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); setTimeout(function () { window.SignumConsole.demo && window.SignumConsole.demo(); }, 700); } }, { threshold: .4 });
-    io.observe($('#console')); return io;
-  }, 'consola io');
-
   var wallReady = safe(initWall, 'muro') || Promise.resolve(false);
-  var ledReady = Promise.resolve(false);
-  try { ledReady = window.SignumLed.init({ reduced: RM }); } catch (e) { console.warn('[boceto] led: ' + e.message); }
-  ledReady = ledReady.catch(function (e) { console.warn('[boceto] led: ' + e.message); root.classList.add('no-led'); return false; });
-
   var last = performance.now();
   function frame(now) {
     var dt = Math.min(.1, (now - last) / 1000); last = now;
     safe(function () {
       if (window.SignumWall.tick) window.SignumWall.tick(now);
-      if (window.SignumLed.tick) window.SignumLed.tick(now);
+      if (window.SignumConsole.tick) window.SignumConsole.tick(dt);
       if (window.SignumProc.tick) window.SignumProc.tick(dt);
-      if (real.tick) real.tick(dt);
-      if (real.checks) real.checks.forEach(function (c) { c(); });
     }, 'bucle');
   }
   if (hasGsap) {
@@ -303,13 +232,10 @@
       if (window.innerWidth === wPrev && Math.abs(window.innerHeight - hPrev) < 140) return;
       wPrev = window.innerWidth; hPrev = window.innerHeight;
       safe(function () { window.SignumWall.resize && window.SignumWall.resize(); }, 'r muro');
-      safe(function () { window.SignumLed.resize && window.SignumLed.resize(); }, 'r led');
-      safe(function () { window.SignumProc.resize(); }, 'r proc');
-      safe(function () { real.measure(); }, 'r real');
       if (hasGsap) ScrollTrigger.refresh();
     }, 180);
   });
-  window.addEventListener('load', function () { if (hasGsap) ScrollTrigger.refresh(); safe(function () { window.SignumProc.resize(); window.SignumLed.resize && window.SignumLed.resize(); }, 'load'); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (hasGsap) ScrollTrigger.refresh(); safe(function () { window.SignumProc.resize(); }, 'fuentes'); });
-  Promise.all([wallReady, ledReady]).then(function () { if (hasGsap) ScrollTrigger.refresh(); safe(function () { window.SignumLed.resize && window.SignumLed.resize(); }, 'led2'); });
+  window.addEventListener('load', function () { if (hasGsap) ScrollTrigger.refresh(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (hasGsap) ScrollTrigger.refresh(); safe(function () { window.SignumWall.resize && window.SignumWall.resize(); }, 'fuentes'); });
+  Promise.resolve(wallReady).then(function () { if (hasGsap) ScrollTrigger.refresh(); });
 })();

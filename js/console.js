@@ -1,119 +1,159 @@
-/* Consola de red: mapa real, campañas y publicación simulada desde Caracas */
+/* Consola de automatizaciones: la hora cambia el menú y el cambio viaja a las sucursales. Es una simulación. */
 (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
   var Con = {};
   window.SignumConsole = Con;
 
+  var RULES = [
+    { id: 'desayuno', name: 'Desayuno', from: 6, to: 11, seg: '#FFC815', bg: '#FFF4DF', ink: '#2A1408', acc: '#E8372C', food: 'coffee', hero: 'Café y arepa', price: '3,99',
+      items: [['Arepa con queso', '2,50'], ['Empanada y café', '3,00'], ['Cachito y jugo', '3,50'], ['Café con leche', '1,50']] },
+    { id: 'almuerzo', name: 'Almuerzo', from: 11, to: 16, seg: '#E8372C', bg: '#E8372C', ink: '#FFFFFF', acc: '#FFC815', food: 'burger', hero: 'Combo doble', price: '5,99',
+      items: [['Hamburguesa doble', '4,50'], ['Combo con papas', '5,99'], ['Pollo crujiente', '5,50'], ['Papas grandes', '2,00']] },
+    { id: 'merienda', name: 'Merienda', from: 16, to: 18, seg: '#F48FB1', bg: '#FCE4EC', ink: '#3E0566', acc: '#D70A84', food: 'icecream', hero: 'Doble helado', price: '2,50',
+      items: [['Helado doble', '2,50'], ['Tequeños (6)', '3,00'], ['Malteada', '3,50'], ['Café frío', '2,00']] },
+    { id: 'cena', name: 'Cena', from: 18, to: 22, seg: '#4D1377', bg: '#160524', ink: '#FFFFFF', acc: '#B5D334', food: 'fries', hero: 'Para compartir', price: '11,99',
+      items: [['Combo familiar', '11,99'], ['Dos hamburguesas', '8,50'], ['Alitas (12)', '9,00'], ['Bebida de litro', '2,50']] }
+  ];
+  function ruleAt(h) { for (var i = 0; i < RULES.length; i++) if (h < RULES[i].to) return RULES[i]; return RULES[RULES.length - 1]; }
+  function hhmm(h) { var m = Math.round(h * 60), H = Math.floor(m / 60), M = m % 60; return (H < 10 ? '0' : '') + H + ':' + (M < 10 ? '0' : '') + M; }
   function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
-  function fmt(s) { return s.toFixed(2).replace('.', ',') + ' s'; }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
   Con.init = function (opt) {
-    var RM = opt.reduced, MAP = window.VE_MAP;
-    if (!MAP) return;
-    var form = document.getElementById('conForm'), nodesG = document.getElementById('mapNodes'), arcsG = document.getElementById('mapArcs');
-    var body = document.getElementById('logBody'), live = document.getElementById('logLive'), count = document.getElementById('logCount'), err = document.getElementById('conErr');
-    var btn = document.getElementById('conPublish'), checks = [].slice.call(form.querySelectorAll('input[name=city]'));
-    var nodes = {}, timers = [], rafs = [], touched = false, running = false;
-    var O = MAP.cities.Caracas;
+    var RM = opt.reduced, MAP = window.VE_MAP, FOOD = window.SIGNUM_FOOD || {};
+    var board = document.getElementById('board'), wipe = document.getElementById('wipe'), range = document.getElementById('timeRange'), now = document.getElementById('timeNow');
+    var playBtn = document.getElementById('timePlay'), promo = document.getElementById('promo'), rulesUl = document.getElementById('rules'), seg = document.getElementById('timeSeg');
+    var netList = document.getElementById('netList'), netCount = document.getElementById('netCount'), live = document.getElementById('logLive'), appState = document.getElementById('appState');
+    var nodesG = document.getElementById('mapNodes'), arcsG = document.getElementById('mapArcs'), land = document.getElementById('mapLand'), root = document.getElementById('console');
+    var current = null, playing = !RM, visible = false, last = 0, swapT = 0, rafs = [], timers = [], ruleBtns = {};
 
-    // Posición de etiqueta a mano para que no se pisen en la costa norte
-    var LAB = { Caracas: [0, -30, 'middle'], Maracaibo: [-4, -30, 'middle'], Valencia: [0, 52, 'middle'], Barquisimeto: [-6, -28, 'middle'], 'Puerto Ordaz': [0, 54, 'middle'], Barcelona: [0, 52, 'middle'], 'San Cristóbal': [22, 12, 'start'], Maturín: [24, 12, 'start'], Porlamar: [24, 4, 'start'], Mérida: [24, 12, 'start'] };
-
-    Object.keys(MAP.cities).forEach(function (name) {
-      var c = MAP.cities[name], g = el('g', { 'class': 'node', 'data-city': name }, nodesG);
-      el('circle', { 'class': 'node-ring', cx: c[0], cy: c[1], r: 15 }, g);
-      el('circle', { 'class': 'node-dot', cx: c[0], cy: c[1], r: 9 }, g);
-      el('circle', { 'class': 'node-hit', cx: c[0], cy: c[1], r: 26 }, g);
-      var L = LAB[name], t = el('text', { 'class': 'node-lbl', x: c[0] + L[0], y: c[1] + L[1], 'text-anchor': L[2] }, g);
-      t.textContent = name;
-      nodes[name] = g;
-      g.style.transformOrigin = c[0] + 'px ' + c[1] + 'px';
-      g.addEventListener('click', function () {
-        var ch = checks.filter(function (x) { return x.value === name; })[0];
-        ch.checked = !ch.checked; touched = true; sync();
-      });
+    /* Pista de horario y reglas */
+    RULES.forEach(function (r) {
+      var s = document.createElement('i');
+      s.style.left = ((r.from - 6) / 16 * 100) + '%'; s.style.width = ((r.to - r.from) / 16 * 100) + '%'; s.style.background = r.seg;
+      seg.appendChild(s);
+      var li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.className = 'rule'; b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<i style="background:' + r.seg + '"></i><b>' + esc(r.name) + '</b><span>' + hhmm(r.from) + ' a ' + hhmm(r.to) + '</span>';
+      b.addEventListener('click', function () { stop(); setHour(r.from + (r.to - r.from) * .4, true); });
+      li.appendChild(b); rulesUl.appendChild(li); ruleBtns[r.id] = b;
     });
 
-    function selected() { return checks.filter(function (c) { return c.checked; }).map(function (c) { return c.value; }); }
-    function sync() {
-      Object.keys(nodes).forEach(function (n) { var on = checks.filter(function (x) { return x.value === n; })[0].checked; nodes[n].classList.toggle('sel', on); });
-      if (selected().length) err.textContent = '';
+    /* Menú en pantalla */
+    function renderBoard(r) {
+      board.style.setProperty('--b-bg', r.bg); board.style.setProperty('--b-ink', r.ink); board.style.setProperty('--b-acc', r.acc);
+      board.innerHTML = '<div class="b-head"><span class="b-title">' + esc(r.name) + '</span><span class="b-hours">' + hhmm(r.from) + ' a ' + hhmm(r.to) + '</span></div>' +
+        '<ul class="b-list">' + r.items.map(function (it) { return '<li><span>' + esc(it[0]) + '</span><b><small>REF</small> ' + esc(it[1]) + '</b></li>'; }).join('') + '</ul>' +
+        '<div class="b-hero"><div class="b-pic">' + (FOOD[r.food] || '') + '</div><div class="b-price"><small>' + esc(r.hero) + '</small><b><small>REF</small> ' + esc(r.price) + '</b></div></div>' +
+        (promo.checked ? '<div class="b-promo">2×1 en combos, solo por hoy</div>' : '');
     }
-    checks.forEach(function (c) { c.addEventListener('change', function () { touched = true; sync(); }); });
-    document.getElementById('conAll').addEventListener('click', function () { checks.forEach(function (c) { c.checked = true; }); touched = true; sync(); });
-    document.getElementById('conNone').addEventListener('click', function () { checks.forEach(function (c) { c.checked = false; }); touched = true; sync(); });
-    [].slice.call(form.querySelectorAll('input[type=radio]')).forEach(function (r) { r.addEventListener('change', function () { touched = true; }); });
-    sync();
 
-    function reset() {
-      timers.forEach(clearTimeout); timers = [];
-      rafs.forEach(cancelAnimationFrame); rafs = [];
+    /* Cortinilla por bloques */
+    for (var w = 0; w < 10; w++) { var strip = document.createElement('i'); strip.style.setProperty('--i', w); wipe.appendChild(strip); }
+    function swap(r) {
+      clearTimeout(swapT);
+      if (RM || !visible) { renderBoard(r); return; }
+      wipe.classList.remove('run'); void wipe.offsetWidth; wipe.classList.add('run');
+      swapT = setTimeout(function () { renderBoard(r); }, 340);
+    }
+
+    /* Red de sucursales */
+    var names = MAP ? Object.keys(MAP.cities) : [], O = MAP ? MAP.cities.Caracas : [0, 0], rows = {}, nodes = {};
+    if (MAP) {
+      land.setAttribute('d', MAP.d);
+      names.forEach(function (n) {
+        var c = MAP.cities[n], g = el('g', { 'class': 'node' }, nodesG);
+        el('circle', { 'class': 'node-ring', cx: c[0], cy: c[1], r: 18 }, g);
+        el('circle', { 'class': 'node-dot', cx: c[0], cy: c[1], r: 15 }, g);
+        nodes[n] = g;
+        var li = document.createElement('li'); li.textContent = n; li.className = 'ok'; netList.appendChild(li); rows[n] = li;
+        g.classList.add('live');
+      });
+    }
+    function dist(n) { var c = MAP.cities[n], dx = c[0] - O[0], dy = c[1] - O[1]; return Math.sqrt(dx * dx + dy * dy); }
+    function publish(label) {
+      if (!MAP) return;
+      rafs.forEach(cancelAnimationFrame); rafs = []; timers.forEach(clearTimeout); timers = [];
       while (arcsG.firstChild) arcsG.removeChild(arcsG.firstChild);
-      Object.keys(nodes).forEach(function (n) { nodes[n].classList.remove('live'); });
-      body.innerHTML = '';
-    }
-
-    function arrive(name, total, when, camp, t0, doneRef) {
-      nodes[name].classList.add('live');
-      var tr = document.createElement('tr'), secs = (performance.now() - t0) / 1000;
-      var state = when === 'ahora' ? 'Al aire' : 'A las ' + when;
-      tr.innerHTML = '<td></td><td><span class="stat"></span></td><td class="num"></td>';
-      tr.children[0].textContent = name;
-      tr.querySelector('.stat').textContent = state;
-      tr.children[2].textContent = '+' + fmt(RM ? 0 : secs);
-      tr.title = camp;
-      body.appendChild(tr);
-      var scroller = body.closest('.log-scroll');
-      if (scroller) scroller.scrollTop = scroller.scrollHeight;
-      if (!RM) { tr.classList.add('row-in'); }
-      doneRef.n++;
-      count.textContent = doneRef.n + ' de ' + total + (when === 'ahora' ? ' al aire' : ' programadas');
-      if (doneRef.n === total) {
-        running = false;
-        btn.querySelector('span').textContent = 'Publicar de nuevo';
-        live.textContent = camp + ': ' + total + (total === 1 ? ' ciudad actualizada.' : ' ciudades actualizadas.') + ' Simulación.';
+      var total = names.length, done = 0;
+      function arrive(n) {
+        nodes[n].classList.remove('live'); void nodes[n].getBBox(); nodes[n].classList.add('live');
+        rows[n].className = 'ok';
+        done++;
+        netCount.textContent = done + ' de ' + total + ' al día';
+        if (done === total) live.textContent = label + ' aplicado en ' + total + ' sucursales. Simulación.';
       }
-    }
-
-    function publish(auto) {
-      var list = selected();
-      if (!list.length) { err.textContent = 'Elija al menos una ciudad para publicar.'; return; }
-      err.textContent = '';
-      reset();
-      running = true;
-      var camp = form.querySelector('input[name=camp]:checked').value, when = form.querySelector('input[name=when]:checked').value;
-      var t0 = performance.now(), ref = { n: 0 }, total = list.length;
-      count.textContent = '0 de ' + total + (when === 'ahora' ? ' al aire' : ' programadas');
-      // Caracas es origen: sale primero
-      list.sort(function (a, b) { return dist(a) - dist(b); });
-      list.forEach(function (name) {
-        var c = MAP.cities[name], d = dist(name);
-        if (d < 1) { timers.push(setTimeout(function () { arrive(name, total, when, camp, t0, ref); }, RM ? 0 : 120)); return; }
+      names.forEach(function (n) { rows[n].className = 'wait'; nodes[n].classList.remove('live'); });
+      netCount.textContent = '0 de ' + total + ' al día';
+      if (RM || !visible) { names.forEach(arrive); return; }
+      names.slice().sort(function (a, b) { return dist(a) - dist(b); }).forEach(function (n) {
+        var c = MAP.cities[n], d = dist(n);
+        if (d < 1) { timers.push(setTimeout(function () { arrive(n); }, 120)); return; }
         var mx = (O[0] + c[0]) / 2, my = (O[1] + c[1]) / 2 - Math.min(170, 50 + d * .28);
         var path = el('path', { 'class': 'arc', d: 'M' + O[0] + ',' + O[1] + ' Q' + mx + ',' + my + ' ' + c[0] + ',' + c[1], pathLength: 1 }, arcsG);
-        if (RM) { path.style.strokeDashoffset = 0; arrive(name, total, when, camp, t0, ref); return; }
-        var dot = el('circle', { 'class': 'packet', r: 8, cx: 0, cy: 0 }, arcsG);
-        var L = path.getTotalLength(), delay = 80 + d * .35, dur = 480 + d * 1.25;
-        var st = performance.now() + delay;
+        var L = path.getTotalLength(), st = performance.now() + 60 + d * .32, dur = 420 + d * 1.05;
         (function step() {
           var id = requestAnimationFrame(function () {
-            var now = performance.now(), k = Math.max(0, Math.min(1, (now - st) / dur)), e = k * k * (3 - 2 * k);
+            var k = Math.max(0, Math.min(1, (performance.now() - st) / dur)), e = k * k * (3 - 2 * k);
             path.style.strokeDashoffset = 1 - e;
-            var pt = path.getPointAtLength(L * e);
-            dot.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
-            if (k < 1) step();
-            else { dot.remove(); path.classList.add('done'); arrive(name, total, when, camp, t0, ref); }
+            if (k < 1) step(); else { path.classList.add('done'); arrive(n); }
           });
           rafs.push(id);
         })();
       });
     }
-    function dist(n) { var c = MAP.cities[n], dx = c[0] - O[0], dy = c[1] - O[1]; return Math.sqrt(dx * dx + dy * dy); }
 
-    form.addEventListener('submit', function (e) { e.preventDefault(); touched = true; publish(false); });
+    /* Hora */
+    function paintRange(h) {
+      now.textContent = hhmm(h);
+      range.setAttribute('aria-valuetext', hhmm(h));
+      if (+range.value !== h) range.value = h;
+    }
+    function setHour(h, fromUser) {
+      paintRange(h);
+      var r = ruleAt(h);
+      if (r === current) return;
+      var first = !current;
+      current = r;
+      Object.keys(ruleBtns).forEach(function (k) { var on = k === r.id; ruleBtns[k].setAttribute('aria-pressed', String(on)); ruleBtns[k].classList.toggle('on', on); });
+      if (first) { renderBoard(r); return; }
+      swap(r);
+      publish('Menú de ' + r.name.toLowerCase());
+    }
+    function stop() {
+      playing = false;
+      playBtn.classList.add('paused'); playBtn.setAttribute('aria-label', 'Reproducir la demostración');
+      appState.textContent = 'Control manual';
+      appState.classList.add('off');
+    }
+    function play() {
+      playing = true;
+      playBtn.classList.remove('paused'); playBtn.setAttribute('aria-label', 'Pausar la demostración');
+      appState.textContent = 'Automatización activa';
+      appState.classList.remove('off');
+    }
+    range.addEventListener('input', function () { stop(); setHour(+range.value, true); });
+    playBtn.addEventListener('click', function () { if (playing) stop(); else play(); });
+    promo.addEventListener('change', function () {
+      if (current) { swap(current); publish(promo.checked ? 'Promoción 2×1' : 'Fin de la promoción'); }
+    });
 
-    Con.demo = function () { if (!touched && !running && !RM) publish(true); };
-    Con.publish = publish;
+    var io = new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: .2 });
+    io.observe(root);
+
+    Con.tick = function (dt) {
+      if (!playing || !visible || RM) return;
+      var hv = parseFloat(range.dataset.c || range.value) + dt * (16 / 24);
+      if (hv >= 22) hv = 6;
+      range.dataset.c = hv;
+      setHour(Math.round(hv * 4) / 4, false);
+    };
+
+    if (RM) { playBtn.classList.add('paused'); playBtn.hidden = true; }
+    setHour(12, false);
+    range.dataset.c = 12;
+    range.addEventListener('input', function () { range.dataset.c = range.value; });
+    rulesUl.addEventListener('click', function () { range.dataset.c = range.value; });
   };
 })();
