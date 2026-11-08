@@ -91,6 +91,23 @@
     cafe: { bg: CREAM, ink: BROWN, acc: RED, t: 'Café', sub: 'Mañanas', img: 'coffee' },
     papas: { bg: GOLD, ink: BROWN, acc: RED, t: 'Papas', sub: 'Grandes', img: 'fries' }
   };
+  // Mensajes de campaña: dos líneas grandes, legibles aunque la pantalla se vea pequeña
+  var CAMPS = {
+    c_promo: { bg: MAG, ink: '#FFFFFF', l: ['2×1 en', 'combos'] },
+    c_almuerzo: { bg: RED, ink: '#FFFFFF', l: ['Almuerzo', 'desde 11:00'] },
+    c_precio: { bg: GOLD, ink: BROWN, l: ['Combo doble', 'REF 5,99'] },
+    c_nuevo: { bg: LIME, ink: NIGHT, l: ['Nuevo', 'doble crujiente'] },
+    c_desayuno: { bg: CREAM, ink: BROWN, l: ['Desayuno', '6:00 a 11:00'] },
+    c_cena: { bg: PUR, ink: '#FFFFFF', l: ['Cena', 'combo familiar'] }
+  };
+  function drawCamp(c, w, h, m) {
+    c.fillStyle = m.bg; c.fillRect(0, 0, w, h);
+    var px = h * .38;
+    m.l.forEach(function (t) { c.font = F(100); px = Math.min(px, 100 * w * .76 / c.measureText(t).width); });
+    c.font = F(px); c.fillStyle = m.ink;
+    var top = (h - px * 1.86) / 2, y1 = top + px * .84;
+    c.textAlign = 'center'; c.fillText(m.l[0], w / 2, y1); c.fillText(m.l[1], w / 2, y1 + px * 1.02); c.textAlign = 'left';
+  }
   function drawMenu(c, w, h, m, imgs) {
     c.fillStyle = m.bg; c.fillRect(0, 0, w, h);
     var pad = w * .055, im = imgs[m.img];
@@ -122,8 +139,8 @@
     var ctx = canvas.getContext('2d'), s = size / 2048;
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, size, size);
     var CW = 512, CH = 307, VW = 256, VH = 569;
-    var names = Object.keys(MENUS);
-    var vnames = Object.keys(VERT);
+    var names = Object.keys(MENUS).concat(Object.keys(CAMPS));
+    var vnames = [];
     var H = {}, V = {}, avgC = document.createElement('canvas'); avgC.width = avgC.height = 4;
     var avgX = avgC.getContext('2d', { willReadFrequently: true });
     function reg(x, y, w, h, store, key) {
@@ -138,7 +155,7 @@
       ctx.save(); ctx.scale(s, s); ctx.translate(x, y);
       ctx.beginPath(); ctx.rect(0, 0, CW, CH); ctx.clip();
       ctx.textBaseline = 'alphabetic';
-      drawMenu(ctx, CW, CH, MENUS[n], imgs);
+      if (CAMPS[n]) drawCamp(ctx, CW, CH, CAMPS[n]); else drawMenu(ctx, CW, CH, MENUS[n], imgs);
       ctx.restore();
       reg(x, y, CW, CH, H, n);
     });
@@ -150,7 +167,7 @@
       ctx.restore();
       reg(x, y, VW, VH, V, n);
     });
-    return { canvas: canvas, H: H, V: V, hKeys: Object.keys(H), vKeys: Object.keys(V) };
+    return { canvas: canvas, H: H, V: V, hKeys: Object.keys(MENUS), vKeys: Object.keys(V) };
   }
 
   /* Murales: una sola pieza repartida entre todas las pantallas */
@@ -265,7 +282,7 @@
     var CONF = {
       d: { rows: [11, 11, 11, 11, 10, 10, 10], R: 15, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 36, camZ: 12, camY: 3.0, tgtY: .95, atlas: 3072, central: .62 },
       t: { rows: [8, 8, 8, 8, 8, 8, 8], R: 12, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 36, camZ: 16, camY: 3.0, tgtY: 1.9, atlas: 2048, central: .62 },
-      m: { rows: [5, 5, 5, 5, 5, 5, 5, 5], R: 9.5, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1536, central: .82 }
+      m: { rows: [4, 4, 4, 4, 4, 4, 4, 4, 4], R: 9.5, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1536, central: .82 }
     };
     var C = CONF[tier];
     var N = C.rows.reduce(function (a, b) { return a + b; }, 0);
@@ -299,7 +316,7 @@
     });
     function key(r, c) { return r + ':' + c; }
     var verticals = [];
-    for (var v = 0; v < Math.round(N * .07); v++) {
+    for (var v = 0; v < 0; v++) {
       var a = slots[Math.floor(rand() * slots.length)];
       var has = C.rows[a.r + 1] && Math.abs(a.c) <= (C.rows[a.r + 1] - 1) / 2;
       if (!has || used[key(a.r, a.c)] || used[key(a.r + 1, a.c)]) continue;
@@ -382,7 +399,7 @@
     function touch() { aUVA.needsUpdate = aUVB.needsUpdate = aTM.needsUpdate = aAvg.needsUpdate = true; }
 
     var MCOL = [[.84, .04, .52], [.91, .22, .17], [.71, .83, .2], [1, .96, .87]];
-    var CAMP = [{ m: 0 }, { h: 'almuerzo', v: 'oferta' }, { m: 1 }, { mix: 1 }, { m: 2 }, { h: 'cena', v: 'bebida' }, { m: 3 }, { h: 'dosxuno', v: 'papas' }];
+    var CAMP = [{ h: 'c_promo', l: '2×1 en combos' }, { h: 'c_almuerzo', l: 'almuerzo desde las 11:00' }, { mix: 1, l: 'menú del día' }, { h: 'c_precio', l: 'nuevo precio del combo doble' }, { h: 'c_nuevo', l: 'nuevo doble crujiente' }, { h: 'c_cena', l: 'cena con combo familiar' }, { h: 'c_desayuno', l: 'desayuno de 6:00 a 11:00' }];
     var campI = 0, wallMode = 'mix', focusForced = false, swapped = false;
     function fillMix(attrUV, texIdx, r) {
       for (var i = 0; i < N; i++) {
@@ -499,7 +516,8 @@
       var mx = 0;
       for (var i = 0; i < N; i++) { var it = items[i], dx = it.x - o.x, dy = it.y - o.y, dz = it.z - o.z, d = Math.sqrt(dx * dx + dy * dy + dz * dz); waveDists[i] = d; if (d > mx) mx = d; }
       sorted = Array.prototype.slice.call(waveDists).sort(function (a, b) { return a - b; });
-      wave = { on: true, t0: lastT, speed: mx / 1.9, max: mx, count: 0, user: !!user };
+      wave = { on: true, t0: lastT, speed: mx / .85, max: mx, count: 0, user: !!user };
+      Wall.label = cmp.l;
       Wall.attracted = true;
       cb(0, N, 'start', !!user);
       if (RM) { commit(); cb(N, N, 'end', !!user); render(); return; }

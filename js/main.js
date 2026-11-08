@@ -137,6 +137,7 @@
       onCount: function (n, tot, phase, user) {
         cN.textContent = n; cT.textContent = tot;
         status.classList.toggle('air', phase === 'end');
+        if (phase === 'end' && window.SignumWall.label) hint.textContent = 'Al aire en todas las pantallas: ' + window.SignumWall.label + '. Contenido de muestra.';
         if (phase === 'end' && user) live.textContent = 'Demostración: ' + tot + ' de ' + tot + ' pantallas actualizadas.';
       }
     });
