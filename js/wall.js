@@ -263,9 +263,9 @@
     var w0 = window.innerWidth;
     var tier = w0 < 700 ? 'm' : w0 < 1100 ? 't' : 'd';
     var CONF = {
-      d: { rows: [27, 27, 27, 25, 25, 25, 23, 23, 23, 21, 21, 21, 17, 15], R: 15, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 36, camZ: 12, camY: 3.0, tgtY: .95, atlas: 3072, central: .62 },
-      t: { rows: [19, 19, 19, 17, 17, 17, 17, 15, 15, 15, 15, 15], R: 12, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 36, camZ: 16, camY: 3.0, tgtY: 1.9, atlas: 2048, central: .62 },
-      m: { rows: [13, 13, 13, 13, 13, 11, 11, 11, 11, 11], R: 9.5, pitchX: 1.06, pitchY: .655, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1536, central: .82 }
+      d: { rows: [11, 11, 11, 11, 10, 10, 10], R: 15, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 36, camZ: 12, camY: 3.0, tgtY: .95, atlas: 3072, central: .62 },
+      t: { rows: [8, 8, 8, 8, 8, 8, 8], R: 12, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 36, camZ: 16, camY: 3.0, tgtY: 1.9, atlas: 2048, central: .62 },
+      m: { rows: [5, 5, 5, 5, 5, 5, 5, 5], R: 9.5, pitchX: 1.18, pitchY: .74, tw: 1.0, th: .6, fov: 40, camZ: 14, camY: 2.2, tgtY: .4, atlas: 1536, central: .82 }
     };
     var C = CONF[tier];
     var N = C.rows.reduce(function (a, b) { return a + b; }, 0);
@@ -436,7 +436,7 @@
       renderer.setSize(size.w, size.h, false);
       camera.aspect = size.w / size.h; camera.updateProjectionMatrix();
       uni.uRes.value.set(size.w * dpr, size.h * dpr);
-      heroPos.set(0, C.camY, C.camZ); heroTgt.set(0, C.tgtY - Math.max(0, camera.aspect - 1.6) * 1.6, -C.R * .3);
+      heroPos.set(0, C.camY, C.camZ); heroTgt.set(0, C.tgtY - Math.max(0, camera.aspect - 1.6) * 1.6, -C.R * .9);
       fitHero();
       var f = items[fIdx], ry = f.ry, nx = Math.sin(ry), nz = Math.cos(ry);
       var ft = Math.tan(C.fov * Math.PI / 360), frac = camera.aspect > 1.2 ? .44 : camera.aspect > .7 ? .62 : .8;
@@ -461,8 +461,12 @@
       var m = measure(), want = Math.max(120, (free.bottom - free.top) * .96);
       var th = halfArc / C.R, pL = new THREE.Vector3(-C.R * Math.sin(th), yMax * .5, -C.R * Math.cos(th)).project(camera);
       var wallW = Math.abs(pL.x) * size.w;
-      var k = clamp(Math.min((m.b - m.t) / want, wallW / (size.w * 1.08)), .45, 1.9);
-      heroPos.z = (heroPos.z + C.R) * k - C.R;
+      var k = clamp(Math.min((m.b - m.t) / want, wallW / (size.w * 1.08)), .2, 1.9);
+      // Acercar o alejar a lo largo de la línea de mirada, nunca más allá del objetivo
+      heroPos.sub(heroTgt).multiplyScalar(k).add(heroTgt);
+      m = measure();
+      var pL2 = new THREE.Vector3(-C.R * Math.sin(th), yMax * .5, -C.R * Math.cos(th)).project(camera), k2 = clamp(Math.min((m.b - m.t) / want, Math.abs(pL2.x) * size.w / (size.w * 1.08)), .6, 1.4);
+      heroPos.sub(heroTgt).multiplyScalar(k2).add(heroTgt);
       m = measure();
       heroShift = (m.t + m.b) / 2 - (free.top + free.bottom) / 2;
     }
@@ -596,13 +600,13 @@
         while (lo < hi) { var mid = (lo + hi) >> 1; if (sorted[mid] <= r) lo = mid + 1; else hi = mid; }
         if (lo !== wave.count) { wave.count = lo; cb(lo, N, 'run', wave.user); }
         if (r > wave.max + uni.uBand.value * 1.8) { commit(); cb(N, N, 'end', wave.user); }
-      } else if (sp < .02 && t - flashT > 0.7 && wallMode === 'mix') {
+      } else if (sp < .02 && t - flashT > 1.6 && wallMode === 'mix') {
         // Pantallas vivas: cambio ocasional mientras no haya una campaña común
         flashT = t;
         var i = Math.floor(idleR() * N), it = items[i];
         setSlot(aUVA, 0, i, it.vert ? atlas.V[vKeys[Math.floor(idleR() * vKeys.length)]] : atlas.H[hKeys[Math.floor(idleR() * hKeys.length)]]);
         aSF.setZ(i, t); aSF.needsUpdate = true; touch();
-      } else if (sp < .02 && t - flashT > 1.1) {
+      } else if (sp < .02 && t - flashT > 2.4) {
         flashT = t; var j = Math.floor(idleR() * N); aSF.setZ(j, t); aSF.needsUpdate = true;
       }
 

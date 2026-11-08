@@ -4,10 +4,10 @@
 
 :root{
   --bg:#0E0318;--surf:#220835;--surf2:#160524;--pur:#4D1377;--ink:#F5F2FA;--mute:#C9BDD8;--mag:#D70A84;--lime:#B5D334;--line:#3A2152;--line2:#6A4A89;
-  --gut:clamp(16px,2.4vw,36px);
+  --gut:clamp(22px,3.3vw,52px);
   --disp:Anton,Impact,"Arial Narrow",sans-serif;
   --navh:72px;
-  --s-d1:clamp(44px,min(5vw,10.5vh),84px);--s-d2:clamp(32px,3.3vw,52px);--s-d3:clamp(21px,1.6vw,25px);--s-b:clamp(17px,1.3vw,19px);--s-u:16px;--s-s:14px;
+  --s-d1:min(58px,calc((100vw - 2 * var(--gut) - 4vw - 24px) * .5833 / 12.6));--s-d2:clamp(32px,3.3vw,52px);--s-d3:clamp(21px,1.6vw,25px);--s-b:clamp(17px,1.3vw,19px);--s-u:16px;--s-s:14px;
     --sec:clamp(72px,10vh,112px);
   --ease:cubic-bezier(.16,1,.3,1);
 }
@@ -29,7 +29,7 @@ button{cursor:pointer;background:none;border:0}
 .wrap{padding-inline:var(--gut)}
 
 .d1,.d2,.d3{font-family:var(--disp);font-weight:400;font-synthesis:none;letter-spacing:.005em}
-.d1{font-size:var(--s-d1);line-height:1.08}
+.d1{font-size:var(--s-d1);line-height:1.08;white-space:nowrap}
 .d2{font-size:var(--s-d2);line-height:1.12;text-wrap:balance}
 .d3{font-size:var(--s-d3);line-height:1.2;letter-spacing:.01em}
 .lead{font-size:var(--s-b);max-width:34em}
@@ -349,7 +349,7 @@ section{scroll-margin-top:var(--navh)}
 
 /* Tablet */
 @media (max-width:1099px){
-  :root{--s-d1:7.4vw;--s-d2:5vw;--s-d3:23px;--navh:64px}
+  :root{--s-d1:min(58px,calc((100vw - 2 * var(--gut) - 30px) / 12.6));--s-d2:5vw;--s-d3:23px;--navh:64px}
   .nav{gap:14px}
   .nav-links{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;gap:0;padding:6px var(--gut) 18px;background:var(--bg)}
   .nav.open .nav-links{display:flex}
@@ -368,7 +368,7 @@ section{scroll-margin-top:var(--navh)}
 
 /* Móvil */
 @media (max-width:699px){
-  :root{--s-d1:10.8vw;--s-d2:7.8vw;--s-d3:22px;--s-b:17px;--navh:60px;--sec:64px}
+  :root{--s-d1:calc((100vw - 2 * var(--gut) - 12px) / 12.6);--s-d2:7.8vw;--s-d3:22px;--s-b:17px;--navh:60px;--sec:64px}
   .nav-logo img{height:30px}
   .btn-nav{display:none}
   .hero-in{padding-top:18px}
